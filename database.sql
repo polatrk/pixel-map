@@ -1,0 +1,6 @@
+CREATE TABLE cells (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    pos_x INT NOT NULL,
+    pos_y INT NOT NULL,
+    color VARCHAR(255) NOT NULL
+);

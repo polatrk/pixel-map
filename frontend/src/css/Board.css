@@ -1,0 +1,13 @@
+#board {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    
+    border: 2px solid;
+}
+
+#cell {
+    background-color: white;
+    width: 2%;
+    height: 2%;
+}
