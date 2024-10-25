@@ -3,22 +3,21 @@
     "version": "1.0.0",
     "main": "server.js",
     "scripts": {
-      "start": "nodemon server.js",
-      "dev": "node server"
+        "start": "nodemon server.js",
+        "dev": "node server"
     },
     "author": "polatrk",
     "license": "ISC",
     "description": "",
     "devDependencies": {
-      "nodemon": "^3.1.7"
+        "nodemon": "^3.1.7"
     },
     "dependencies": {
-      "cookie-parser": "^1.4.7",
-      "cors": "^2.8.5",
-      "express": "^4.21.0",
-      "express-async-handler": "^1.2.0",
-      "mysql2": "^3.11.3",
-      "sequelize": "^6.37.4"
+        "cookie-parser": "^1.4.7",
+        "cors": "^2.8.5",
+        "express": "^4.21.0",
+        "express-async-handler": "^1.2.0",
+        "mysql2": "^3.11.3",
+        "sequelize": "^6.37.4"
     }
-  }
-  
+}

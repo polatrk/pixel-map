@@ -8,8 +8,10 @@ const MainBoard = () => {
     useEffect(() => {
         const zoomDiv = document.querySelector("#zoom-controller")
         const moveDiv = document.querySelector("#move-controller")
+
         let bIsMouseDown = false
         let clickPosInCanvas = {pos_x: 0, pos_y: 0}
+
         const handleZoom = (e) => ControlZoom(e, zoomDiv)
         const handleMouseMove = (e) => {if(bIsMouseDown) {ControlMove(e, moveDiv, clickPosInCanvas)}}
 
@@ -17,7 +19,7 @@ const MainBoard = () => {
             document.addEventListener('wheel', handleZoom);
         if (moveDiv) {
             document.addEventListener("mousemove", handleMouseMove)
-            document.addEventListener("mouseup", () => bIsMouseDown = false)
+            document.addEventListener("mouseup", () => {bIsMouseDown = false})
             document.addEventListener("mousedown", (e) => {
                 bIsMouseDown = true
                 clickPosInCanvas = getCursorPosInCanvas({pos_x: e.clientX, pos_y: e.clientY}, moveDiv.querySelector("#drawing-board"))

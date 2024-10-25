@@ -4,3 +4,9 @@ CREATE TABLE cells (
     pos_y INT NOT NULL,
     color VARCHAR(255) NOT NULL
 );
+
+CREATE TABLE drawing_board(  
+    id int PRIMARY KEY AUTO_INCREMENT,
+    property VARCHAR(50) NOT NULL,
+    value TEXT
+);
