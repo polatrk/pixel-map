@@ -1,17 +1,11 @@
 import { DrawSingleCell } from "./DrawingUtils"
+import { getCursorPosInCanvas } from "./TransformUtils"
 
-export function getCursorPosInCanvas(_canvas, event) {
-    const canvasBounds = _canvas.getBoundingClientRect()
-    const rel_x = event.clientX - canvasBounds.left
-    const rel_y = event.clientY - canvasBounds.top
-
-    return {pos_x: rel_x, pos_y: rel_y}
-}
-
-export function OnClickInCanvas(_canvas, event, color) {
+export function OnClickInCanvas(_canvas, event) {
     const ctx = _canvas.getContext('2d')
-    let {pos_x, pos_y} = getCursorPosInCanvas(_canvas, event)
-    
+    let {pos_x, pos_y} = getCursorPosInCanvas({pos_x: event.clientX, pos_y: event.clientY}, _canvas)
+    const color = localStorage.getItem('selectedColor')
+
     // round to the 10th
     pos_x = Math.floor(pos_x/10)
     pos_y = Math.floor(pos_y/10)

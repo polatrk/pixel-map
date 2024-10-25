@@ -1,11 +1,11 @@
 import {Routes, Route} from 'react-router-dom'
-import Board from './pages/Board';
+import MainBoard from './pages/MainBoard';
 import './css/Global.css'
 
 function App() {
   return (
     <Routes>
-      <Route index element={<Board />} />
+      <Route index element={<MainBoard />} />
     </Routes>
   );
 }

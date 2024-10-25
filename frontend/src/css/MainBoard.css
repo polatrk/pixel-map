@@ -1,0 +1,24 @@
+#main-board {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#color-palette {
+    position: absolute;
+}
+
+#move-controller {
+    position: relative;
+    margin-inline: auto; 
+    width: fit-content;
+}
+#zoom-controller {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

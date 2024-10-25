@@ -1,8 +1,4 @@
-#board {
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
-    
+#drawing-board {    
     border: 2px solid;
 }
 

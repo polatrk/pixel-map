@@ -1,16 +1,14 @@
 import React, { useEffect } from 'react'
 import {  DrawMultipleCells } from '../Utils/DrawingUtils'
-import { OnClickInCanvas } from '../Utils/BoardControls'
-import '../css/Board.css'
-import ColorPalette from './components/ColorPalette'
+import { OnClickInCanvas } from '../Utils/DrawingBoardControls'
+import '../css/DrawingBoard.css'
 
-const Board = () => {
+const DrawingBoard = () => {
   useEffect(() => {
-    const canvas = document.querySelector("#board")
+    const canvas = document.querySelector("#drawing-board")
     const ctx = canvas.getContext('2d')
-    const selectedColor = 'black'
 
-    const handleClickOnCanvas = (event) => OnClickInCanvas(canvas, event, selectedColor);
+    const handleClickOnCanvas = (event) => OnClickInCanvas(canvas, event);
     canvas.addEventListener('click', handleClickOnCanvas)
 
 
@@ -37,10 +35,9 @@ const Board = () => {
 
   return (
     <>
-    <canvas width='500' height='500' id='board' />
-    <ColorPalette />
+    <canvas width='500' height='500'  id='drawing-board' />
     </>
   )
 }
 
-export default Board
+export default DrawingBoard
