@@ -1,3 +1,4 @@
+import axios from "axios"
 import { getCursorPosInCanvas } from "./TransformUtils"
 
 export function OnClickInCanvas(_canvas, event, socket) {
@@ -8,25 +9,23 @@ export function OnClickInCanvas(_canvas, event, socket) {
     pos_x = Math.floor(pos_x/10)
     pos_y = Math.floor(pos_y/10)
 
-    fetch('http://localhost:3001/cells', {
+    const cellData = {
+        _pos_x: pos_x,
+        _pos_y: pos_y,
+        _color: color,
+    };
+    
+    // Send the POST request with axios
+    axios.post('/cells', cellData, {
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
         },
-        method: 'POST',
-        body: JSON.stringify({
-            _pos_x: pos_x,
-            _pos_y: pos_y,
-            _color: color
-        })
     })
     .then(response => {
-        if (!response.ok) {
-          throw new Error("Failed to save cell");
-        }
-        return response.json();
-      })
-    .then(data => socket.send(JSON.stringify(data)))
+        // Assuming socket is already defined and connected
+        socket.send(JSON.stringify(response.data));
+    })
     .catch(error => {
-    console.error("Error:", error);
+        console.error("Error:", error);
     });
 }

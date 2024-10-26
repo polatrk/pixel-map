@@ -30,8 +30,3 @@ wss.on('connection', (ws) => {
     })
   })
 })
-  
-fetch("http://localhost:3001/properties")
-.then(response => response.json())
-.then(data => console.log(data))
-.catch(err => console.log(err))
