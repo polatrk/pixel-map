@@ -1,4 +1,4 @@
-#palette-container {
+.palette-container {
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
@@ -8,7 +8,9 @@
 
     width: 34vh;
     height: max-content;
+}
 
+.bot-left {
     left: 2vh;
     bottom: 2vh;
 

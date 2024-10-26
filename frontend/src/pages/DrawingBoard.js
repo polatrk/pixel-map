@@ -3,6 +3,7 @@ import {  DrawMultipleCells } from '../Utils/DrawingUtils'
 import { OnClickInCanvas } from '../Utils/DrawingBoardControls'
 import axios from 'axios'
 import '../css/DrawingBoard.css'
+import { getCursorPosInCanvas } from '../Utils/TransformUtils'
 
 const DrawingBoard = () => {
   const [isLoaded, setLoaded] = useState(false)
@@ -14,8 +15,13 @@ const DrawingBoard = () => {
 
     // define handler funcs
     const handleClickOnCanvas = (e) => {
+      const clickPosInCanvas = getCursorPosInCanvas({pos_x: e.clientX, pos_y: e.clientY}, canvas)
+
+      // Make srue that the canvas isn't moving and we are in bounds
       if(Math.abs(e.clientX - downClickPos.pos_x) < 5 && Math.abs(e.clientY === downClickPos.pos_y) < 5)
-        OnClickInCanvas(canvas, e)
+        if(clickPosInCanvas.pos_x >= 0 && clickPosInCanvas.pos_x <= canvas.width)
+          if(clickPosInCanvas.pos_y >= 0 && clickPosInCanvas.pos_y <= canvas.height)
+            OnClickInCanvas(canvas, e)
     };
 
     // Add listeners
@@ -29,8 +35,9 @@ const DrawingBoard = () => {
 
       canvas.width = response.data.x
       canvas.height = response.data.y
+      canvas.style.visibility = 'visible'
 
-      // Once canvas init...
+      // Once canvas init
       axios.get('http://localhost:3001/cells') // Fetch all cells
       .then(response => {
         DrawMultipleCells(response.data, ctx);
@@ -57,7 +64,7 @@ const DrawingBoard = () => {
         {!isLoaded && (
           <h1>Loading...</h1>
         )}
-        <canvas width={0} height={0}  id='drawing-board' />
+        <canvas width={0} height={0} style={{visibility: 'hidden'}} id='drawing-board' />
     </>
   )
 }

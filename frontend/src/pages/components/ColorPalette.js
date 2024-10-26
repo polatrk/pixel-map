@@ -1,12 +1,9 @@
+import { useEffect, useState } from 'react'
 import '../../css/ColorPalette.css'
+import axios from 'axios'
 
 const ColorPalette = () => {
-    const colors = [
-        "#670119", "#bc0036", "#fd4300", "#fea701", "#fdd635", "#fef6b9",
-         "#00ca76", "#7eea57", "#00746e", "#009ca9" , "#00ccbf", "#214fa1",
-          "#93b2fc", "#e5aafd", "#fd3780", "#fe97a8", "#6c472d", "#9a6825",
-           "#fdb26d", "#000", "#505254", "#fefefe"
-    ]
+    const [palette, setPalette] = useState()
     
     // Set default color
     localStorage.setItem('selectedColor', "#000")
@@ -15,16 +12,30 @@ const ColorPalette = () => {
       localStorage.setItem('selectedColor', color)
     }
 
+    useEffect(() => {
+      axios.get('http://localhost:3001/properties/palette')
+      .then(response => {
+          setPalette(response.data);
+      })
+      .catch(error => {
+          console.error("Error:", error);
+    })}, [])
+
+
   return (
-    <div id="palette-container">
-        {colors.map(color => {
-            return <div 
-            id="color-choice" 
-            key={color} style={{backgroundColor: color}} 
-            onClick={() => handleColorClick(color)}
-            />
-        })}
-    </div>
+    <div className="palette-container bot-left">
+      {Array.isArray(palette) ? (
+        palette.map(color => {
+          return <div 
+          id="color-choice" 
+          key={color} style={{backgroundColor: color}} 
+          onClick={() => handleColorClick(color)}
+          />
+      })
+    ) : (
+      <h1>Loading...</h1>
+    )}
+      </div>
   )
 }
 

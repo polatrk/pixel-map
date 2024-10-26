@@ -1,0 +1,23 @@
+.size-panel {
+
+}
+
+.palette-panel {
+
+}
+
+.palette-editor {
+    display: flex;
+    flex-direction: row;
+}
+
+.color-editor {
+    display: flex;
+    flex-direction: column;
+}
+
+.color-preview {
+    width: 8vh;
+    height: 8vh;
+    border: .2vh solid;
+}
