@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import axios from 'axios';
+import axiosInstance from '../axiosInstance'
 import '../css/AdminPanel.css'
 
 const Admin = () => {
@@ -9,7 +9,7 @@ const Admin = () => {
     const [newColor, setNewColor] = useState()
 
     useEffect(() => {
-        axios.get('http://localhost:3001/properties/size')
+        axiosInstance.get('/properties/size')
         .then(response => {
             setSize(response.data);
         })
@@ -17,7 +17,7 @@ const Admin = () => {
             console.error("Error:", error);
         });
   
-        axios.get('http://localhost:3001/properties/palette')
+        axiosInstance.get('/properties/palette')
         .then(response => {
             setPalette(response.data);
         })
@@ -27,7 +27,7 @@ const Admin = () => {
     }, [])
 
     const saveSize = () => {
-        axios.post('http://localhost:3001/properties/size', {
+        axiosInstance.post('/properties/size', {
             value: size
         })
         .then(response => {
@@ -39,7 +39,7 @@ const Admin = () => {
     }
 
     const savePalette = () => {
-        axios.post('http://localhost:3001/properties/palette', {
+        axiosInstance.post('/properties/palette', {
             value: palette
         })
         .then(response => {

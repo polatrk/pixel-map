@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import '../../css/ColorPalette.css'
-import axios from 'axios'
+import axiosInstance from '../../axiosInstance'
 
 const ColorPalette = () => {
     const [palette, setPalette] = useState()
@@ -13,7 +13,7 @@ const ColorPalette = () => {
     }
 
     useEffect(() => {
-      axios.get('http://localhost:3001/properties/palette')
+      axiosInstance.get('/properties/palette')
       .then(response => {
           setPalette(response.data);
       })

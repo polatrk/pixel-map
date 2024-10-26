@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import {  DrawMultipleCells, DrawSingleCell } from '../Utils/DrawingUtils'
 import { OnClickInCanvas } from '../Utils/DrawingBoardControls'
-import axios from 'axios'
+import axiosInstance from '../axiosInstance'
 import { getCursorPosInCanvas } from '../Utils/TransformUtils'
 import '../css/DrawingBoard.css'
 
@@ -38,7 +38,7 @@ const DrawingBoard = () => {
     canvas.addEventListener('mousedown', (e) => downClickPos = {pos_x: e.clientX, pos_y: e.clientY})
 
     // fetch data
-    axios.get('http://localhost:3001/properties/size') // Fetch size
+    axiosInstance.get('/properties/size') // Fetch size
     .then(response => {
       setLoaded(true)
 
@@ -47,7 +47,7 @@ const DrawingBoard = () => {
       canvas.style.visibility = 'visible'
 
       // once canvas init
-      axios.get('http://localhost:3001/cells') // fetch all cells
+      axiosInstance.get('/cells') // fetch all cells
       .then(response => {
         DrawMultipleCells(response.data, ctx);
       })
