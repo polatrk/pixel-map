@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 
-const sequelize = new Sequelize('pixelmap', 'root', '', {
-    host: 'localhost',
+const sequelize = new Sequelize('sql7740928', 'sql7740928', 'k4XFsNaWIy', {
+    host: 'sql7.freesqldatabase.com',
     dialect: 'mysql',
 });
 
