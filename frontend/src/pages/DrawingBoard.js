@@ -1,34 +1,43 @@
 import { useEffect, useState } from 'react'
-import {  DrawMultipleCells } from '../Utils/DrawingUtils'
+import {  DrawMultipleCells, DrawSingleCell } from '../Utils/DrawingUtils'
 import { OnClickInCanvas } from '../Utils/DrawingBoardControls'
 import axios from 'axios'
-import '../css/DrawingBoard.css'
 import { getCursorPosInCanvas } from '../Utils/TransformUtils'
+import '../css/DrawingBoard.css'
 
 const DrawingBoard = () => {
   const [isLoaded, setLoaded] = useState(false)
 
   useEffect(() => {
+    // connect to the wss
+    const socket = new WebSocket('ws://localhost:3001')
+
+    // init variables
     const canvas = document.querySelector("#drawing-board")
     const ctx = canvas.getContext('2d')
     let downClickPos = {pos_x: 0, pos_y: 0}
+
+    // handle ws callback
+    socket.onmessage = (e) => {
+      DrawSingleCell(ctx, JSON.parse(e.data))
+    }
 
     // define handler funcs
     const handleClickOnCanvas = (e) => {
       const clickPosInCanvas = getCursorPosInCanvas({pos_x: e.clientX, pos_y: e.clientY}, canvas)
 
-      // Make srue that the canvas isn't moving and we are in bounds
+      // make srue that the canvas isn't moving and we are in bounds
       if(Math.abs(e.clientX - downClickPos.pos_x) < 5 && Math.abs(e.clientY === downClickPos.pos_y) < 5)
         if(clickPosInCanvas.pos_x >= 0 && clickPosInCanvas.pos_x <= canvas.width)
           if(clickPosInCanvas.pos_y >= 0 && clickPosInCanvas.pos_y <= canvas.height)
-            OnClickInCanvas(canvas, e)
+            OnClickInCanvas(canvas, e, socket)
     };
 
-    // Add listeners
+    // add listeners
     canvas.addEventListener('mouseup', handleClickOnCanvas)
     canvas.addEventListener('mousedown', (e) => downClickPos = {pos_x: e.clientX, pos_y: e.clientY})
 
-    // Fectch data
+    // fetch data
     axios.get('http://localhost:3001/properties/size') // Fetch size
     .then(response => {
       setLoaded(true)
@@ -37,8 +46,8 @@ const DrawingBoard = () => {
       canvas.height = response.data.y
       canvas.style.visibility = 'visible'
 
-      // Once canvas init
-      axios.get('http://localhost:3001/cells') // Fetch all cells
+      // once canvas init
+      axios.get('http://localhost:3001/cells') // fetch all cells
       .then(response => {
         DrawMultipleCells(response.data, ctx);
       })
@@ -51,13 +60,14 @@ const DrawingBoard = () => {
       console.error("Error:", error);
     });
 
-    // Cleanup function to remove event listener else it trigger two times
+    // cleanup
     return () => {
-      canvas.removeEventListener('mouseup', handleClickOnCanvas);
+      canvas.removeEventListener('mouseup', handleClickOnCanvas); // else it trigger two times
+      socket.close()
     };
         
 
-    }, []);  // Empty dependency array to run this effect only once on component mount
+    }, []);  // empty dependency array to run this effect only once on component mount
 
   return (
     <>

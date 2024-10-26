@@ -1,16 +1,12 @@
-import { DrawSingleCell } from "./DrawingUtils"
 import { getCursorPosInCanvas } from "./TransformUtils"
 
-export function OnClickInCanvas(_canvas, event) {
-    const ctx = _canvas.getContext('2d')
+export function OnClickInCanvas(_canvas, event, socket) {
     let {pos_x, pos_y} = getCursorPosInCanvas({pos_x: event.clientX, pos_y: event.clientY}, _canvas)
     const color = localStorage.getItem('selectedColor')
 
     // round to the 10th
     pos_x = Math.floor(pos_x/10)
     pos_y = Math.floor(pos_y/10)
-
-    DrawSingleCell(ctx, pos_x, pos_y)
 
     fetch('http://localhost:3001/cells', {
         headers: {
@@ -29,7 +25,7 @@ export function OnClickInCanvas(_canvas, event) {
         }
         return response.json();
       })
-    .then(data => DrawSingleCell(ctx, data))
+    .then(data => socket.send(JSON.stringify(data)))
     .catch(error => {
     console.error("Error:", error);
     });
