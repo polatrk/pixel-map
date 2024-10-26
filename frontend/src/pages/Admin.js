@@ -4,6 +4,7 @@ import '../css/AdminPanel.css'
 
 const Admin = () => {
     const [size, setSize] = useState()
+
     const [palette, setPalette] = useState()
     const [newColor, setNewColor] = useState()
 
@@ -37,16 +38,49 @@ const Admin = () => {
         });
     }
 
+    const savePalette = () => {
+        axios.post('http://localhost:3001/properties/palette', {
+            value: palette
+        })
+        .then(response => {
+            alert("Palette saved successfully !")
+        })
+        .catch(error => {
+            console.error("Error:", error);
+        });
+    }
+
     const handleNewColorInput = (e) => {
-        setNewColor(e.target.value)
-        const newColorInput = document.getElementById('newColor')
+        let input = e.target.value.toUpperCase();
+        input = input.replace(/[^0-9A-F]/g, ''); // Remove invalid characters
+    
+        // Because hex color is 6 max
+        if (input.length > 6) {
+          input = input.slice(0, 6);
+        }
+
+        setNewColor(`#${input}`);
+
         const colorPreview = document.getElementById('color-preview')
-        console.log(`#${newColor}`)
-        colorPreview.style.backgroundColor = `#${colorPreview}`
+        colorPreview.style.backgroundColor = `#${input}`
     }
 
     const addNewColor = (e) => {
+        const newColorIndex = document.getElementById('newColorIndex').value
+        if(newColorIndex === '')
+            setPalette(prevPalette => [...prevPalette, newColor])
+        else
+            setPalette(prevPalette => [
+                ...prevPalette.slice(0, newColorIndex),
+                newColor,
+                ...prevPalette.slice(newColorIndex)
+            ])
+        console.log(palette)
+    }
 
+    const removeColor = (colorToRemove) => {
+        if(window.confirm(`Do you really want to remove the color ${colorToRemove} ?`))
+            setPalette(prevPalette => prevPalette.filter(color => color !== colorToRemove))
     }
 
   return (
@@ -67,20 +101,23 @@ const Admin = () => {
             <h1>Palette</h1>
             <div className='palette-editor'>
                 <div className="palette-container">
-                    {palette.map(color => {
+                    {palette.map((color, index) => {
                     return <div 
                     id="color-choice" 
-                    key={color} style={{backgroundColor: color}} 
-                    onClick={() => (null)}//handleColorClick(color)}
-                    />
+                    key={color} 
+                    style={{backgroundColor: color}} 
+                    onClick={() => removeColor(color)}
+                    >{index}</div>
                 })}
                 </div>
                 <div className='color-editor'>
                     <div id='color-preview' className='color-preview' />
-                    <input id='newColor' value={"000"} onChange={handleNewColorInput} />
+                    <input id='newColor' value={newColor} placeholder='000000' onInput={handleNewColorInput} />
+                    <input id='newColorIndex' type='number' placeholder='end' />
+                    <button onClick={addNewColor}>Save new color</button>
                 </div>         
             </div>
-            <button onClick={addNewColor}>Save</button>            
+            <button onClick={savePalette}>Save</button>            
         </div>
 
         </>
