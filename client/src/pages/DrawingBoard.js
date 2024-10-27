@@ -10,7 +10,7 @@ const DrawingBoard = () => {
 
   useEffect(() => {
     // connect to the wss
-    const socket = new WebSocket(`wss://${process.env.REACT_APP_SERVER_URL}`)
+    const socket = new WebSocket(`wss://${process.env.REACT_APP_SERVER_URL.replace(/^.*\/\//, "")}`)
 
     // init variables
     const canvas = document.querySelector("#drawing-board")
