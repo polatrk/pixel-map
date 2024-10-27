@@ -10,7 +10,7 @@ const DrawingBoard = () => {
 
   useEffect(() => {
     // connect to the wss
-    const socket = new WebSocket('wss://pixel-map-production.up.railway.app')
+    const socket = new WebSocket('wss://epixel-server.up.railway.app')
 
     // init variables
     const canvas = document.querySelector("#drawing-board")
