@@ -9,8 +9,11 @@ const DrawingBoard = () => {
   const [isLoaded, setLoaded] = useState(false)
 
   useEffect(() => {
-    // connect to the wss
-    const socket = new WebSocket(`wss://${process.env.REACT_APP_SERVER_URL.replace(/^.*\/\//, "")}`)
+    // create ws connection
+    const wssUrl = process.env.REACT_APP_SERVER_URL
+    const isLocalHost = wssUrl.includes('localhost')
+    const socketProtocol = isLocalHost ? 'ws' : 'wss'
+    const socket = new WebSocket(`${socketProtocol}://${process.env.REACT_APP_SERVER_URL.replace(/^.*\/\//, "")}`)
 
     // init variables
     const canvas = document.querySelector("#drawing-board")
