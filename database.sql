@@ -10,3 +10,10 @@ CREATE TABLE drawing_board(
     property VARCHAR(50) NOT NULL,
     value TEXT
 );
+
+CREATE TABLE users(  
+    id int NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(255),
+    email VARCHAR(255),
+    password VARCHAR(255)
+);

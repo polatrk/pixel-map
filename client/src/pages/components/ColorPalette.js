@@ -27,7 +27,7 @@ const ColorPalette = () => {
       {Array.isArray(palette) ? (
         palette.map(color => {
           return <div 
-          id="color-choice" 
+          className="color-choice" 
           key={color} style={{backgroundColor: color}} 
           onClick={() => handleColorClick(color)}
           />

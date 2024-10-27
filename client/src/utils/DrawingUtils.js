@@ -1,3 +1,5 @@
+import { CELL_SIZE } from "../config/constants";
+
 export function DrawMultipleCells(_cells, _ctx) {
     _cells.forEach(cell_data => {
       DrawSingleCell(_ctx, cell_data)
@@ -7,9 +9,9 @@ export function DrawMultipleCells(_cells, _ctx) {
 export function DrawSingleCell(_ctx, cellData) {
     _ctx.fillStyle = cellData.color
     _ctx.fillRect(
-      cellData.pos_x*10, // pos x
-      cellData.pos_y*10, // pos y
-      10, // width
-      10  // height
+      cellData.pos_x*CELL_SIZE, // pos x
+      cellData.pos_y*CELL_SIZE, // pos y
+      20, // width
+      20  // height
     )
   }

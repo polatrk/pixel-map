@@ -4,3 +4,20 @@ html, body, #root {
     margin: 0;
     padding: 0;
 }
+
+.bot-left {
+    left: 2vh;
+    bottom: 2vh;
+
+    margin: 0;
+
+    position: fixed;
+}
+
+.top-right {
+    right: 2vh;
+    top: 2vh;
+
+    margin: 0;
+    position: fixed;
+}

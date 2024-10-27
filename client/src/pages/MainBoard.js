@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import DrawingBoard from './DrawingBoard'
 import ColorPalette from './components/ColorPalette'
-import { ControlZoom, ControlMove, getCursorPosInCanvas } from '../Utils/TransformUtils'
+import { ControlZoom, ControlMove, getCursorPosInCanvas } from '../utils/TransformUtils'
 import '../css/MainBoard.css'
+import Header from './components/Header'
 
 const MainBoard = () => {
     useEffect(() => {
@@ -38,14 +39,15 @@ const MainBoard = () => {
     })
 
   return (
-    <div id='main-board'>
+    <div className='main-board'>
+        <Header className='header'/>
         <div id='zoom-controller'>
             <div id='move-controller'>
                 <DrawingBoard />
             </div>
         </div>
 
-        <ColorPalette id="color-palette"/>
+        <ColorPalette className="color-palette"/>
     </div>
   )
 }

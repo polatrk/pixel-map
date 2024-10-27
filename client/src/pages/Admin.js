@@ -75,7 +75,6 @@ const Admin = () => {
                 newColor,
                 ...prevPalette.slice(newColorIndex)
             ])
-        console.log(palette)
     }
 
     const removeColor = (colorToRemove) => {

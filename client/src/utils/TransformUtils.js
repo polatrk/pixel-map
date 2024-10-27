@@ -1,3 +1,5 @@
+import { MAX_ZOOM, MIN_ZOOM } from "../config/constants"
+
 export function getCursorPosInCanvas(clickPos, _canvas) {
     const canvasBounds = _canvas.getBoundingClientRect()
     const zoomDiv = _canvas.closest("#zoom-controller")
@@ -24,7 +26,7 @@ export function ControlZoom(event, zoomDiv) {
 
     const newScale = currentScale * zoomAmount;
 
-    const clampedScale = Math.max(Math.min(10, newScale), 0.5)
+    const clampedScale = Math.max(Math.min(MAX_ZOOM, newScale), MIN_ZOOM)
 
     zoomDiv.style.transform = `scale(${clampedScale})`;
 }

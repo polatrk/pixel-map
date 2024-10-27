@@ -10,16 +10,7 @@
     height: max-content;
 }
 
-.bot-left {
-    left: 2vh;
-    bottom: 2vh;
-
-    margin: 0;
-
-    position: fixed; /* Relative position for the palette to be placed absolutely inside this */
-}
-
-#color-choice {
+.color-choice {
     width: 4vh;
     height: 4vh;
     border: .1vh solid;

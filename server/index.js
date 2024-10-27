@@ -24,7 +24,7 @@ wsserver.on('connection', (ws) => {
     console.log(`server received: ${message}`)
 
     wsserver.clients.forEach(client => {
-      if(client.readyState === WebSocket.OPEN && client !== ws) {
+      if(client.readyState === WebSocket.OPEN) {
         client.send(message, {binary: false})
       }
     })

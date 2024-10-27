@@ -1,9 +1,15 @@
-#drawing-board {    
-    border: 2px solid;
+#drawing-board,
+#canvas-cursor {    
+    image-rendering: pixelated;
 }
 
 #cell {
     background-color: white;
     width: 2%;
     height: 2%;
+}
+
+#canvas-cursor {
+    position: absolute;
+    pointer-events: none;
 }

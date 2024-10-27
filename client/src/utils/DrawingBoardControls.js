@@ -1,15 +1,14 @@
 import { getCursorPosInCanvas } from "./TransformUtils"
 import axiosInstance from "../axiosInstance"
-import { DrawSingleCell } from "./DrawingUtils"
+import { CELL_SIZE } from "../config/constants"
 
 export function OnClickInCanvas(_canvas, event, socket) {
-    const ctx = _canvas.getContext('2d')
     let {pos_x, pos_y} = getCursorPosInCanvas({pos_x: event.clientX, pos_y: event.clientY}, _canvas)
     const color = localStorage.getItem('selectedColor')
 
-    // round to the 10th
-    pos_x = Math.floor(pos_x/10)
-    pos_y = Math.floor(pos_y/10)
+    // round to the cell size
+    pos_x = Math.floor(pos_x/CELL_SIZE)
+    pos_y = Math.floor(pos_y/CELL_SIZE)
 
     const cellData = {
         _pos_x: pos_x,
@@ -26,7 +25,6 @@ export function OnClickInCanvas(_canvas, event, socket) {
     .then(response => {
         // Assuming socket is already defined and connected
         socket.send(JSON.stringify(response.data));
-        DrawSingleCell(ctx, response.data)
     })
     .catch(error => {
         console.error("Error:", error);
