@@ -15,15 +15,15 @@ app.use('/properties', propertiesRouter);
 
 const server = app.listen(3001)
 
-const wss = new WebSocket.Server({server})
+const wsserver = new WebSocket.Server({server})
 
-wss.on('connection', (ws) => {
+wsserver.on('connection', (ws) => {
   console.log('new ws connection')
 
   ws.on('message', message => {
     console.log(`server received: ${message}`)
 
-    wss.clients.forEach(client => {
+    wsserver.clients.forEach(client => {
       if(client.readyState === WebSocket.OPEN) {
         client.send(message, {binary: false})
       }

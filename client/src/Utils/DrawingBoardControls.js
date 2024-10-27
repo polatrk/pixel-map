@@ -1,5 +1,6 @@
 import axios from "axios"
 import { getCursorPosInCanvas } from "./TransformUtils"
+import axiosInstance from "../axiosInstance"
 
 export function OnClickInCanvas(_canvas, event, socket) {
     let {pos_x, pos_y} = getCursorPosInCanvas({pos_x: event.clientX, pos_y: event.clientY}, _canvas)
@@ -16,7 +17,7 @@ export function OnClickInCanvas(_canvas, event, socket) {
     };
     
     // Send the POST request with axios
-    axios.post('/cells', cellData, {
+    axiosInstance.post('/cells', cellData, {
         headers: {
             'Content-Type': 'application/json',
         },
