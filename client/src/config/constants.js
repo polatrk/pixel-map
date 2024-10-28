@@ -1,4 +1,4 @@
-export const CELL_SIZE = 20
+export const CELL_SIZE = 100
 
-export const MIN_ZOOM = .1
-export const MAX_ZOOM = 10
+export const MIN_ZOOM = .01
+export const MAX_ZOOM = 1

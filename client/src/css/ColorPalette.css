@@ -1,17 +1,19 @@
 .palette-container {
     display: flex;
-    flex-wrap: wrap;
     flex-direction: row;
     
     border: 1px solid;
     background-color: white;
 
-    width: 34vh;
+    width: 90%;
     height: max-content;
+
+    overflow-x: scroll;
 }
 
 .color-choice {
-    width: 4vh;
+    width: 10vh;
     height: 4vh;
     border: .1vh solid;
+    flex-shrink: 0;
 }

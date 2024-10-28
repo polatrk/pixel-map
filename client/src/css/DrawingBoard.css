@@ -9,6 +9,10 @@
     height: 2%;
 }
 
+#drawing-board {
+    background-color: #FFFFFF;
+}
+
 #canvas-cursor {
     position: absolute;
     pointer-events: none;

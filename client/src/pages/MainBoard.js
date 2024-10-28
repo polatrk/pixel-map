@@ -17,11 +17,11 @@ const MainBoard = () => {
         const handleMouseMove = (e) => {if(bIsMouseDown) {ControlMove(e, moveDiv, clickPosInCanvas)}}
 
         if (zoomDiv)
-            document.addEventListener('wheel', handleZoom);
+            zoomDiv.addEventListener('wheel', handleZoom);
         if (moveDiv) {
-            document.addEventListener("mousemove", handleMouseMove)
-            document.addEventListener("mouseup", () => {bIsMouseDown = false})
-            document.addEventListener("mousedown", (e) => {
+            moveDiv.addEventListener("mousemove", handleMouseMove)
+            moveDiv.addEventListener("mouseup", () => {bIsMouseDown = false})
+            moveDiv.addEventListener("mousedown", (e) => {
                 bIsMouseDown = true
                 clickPosInCanvas = getCursorPosInCanvas({pos_x: e.clientX, pos_y: e.clientY}, moveDiv.querySelector("#drawing-board"))
             })
@@ -30,10 +30,10 @@ const MainBoard = () => {
         // Cleanup the event listener on unmount
         return () => {
             if (zoomDiv) {
-                document.removeEventListener('wheel', handleZoom);
+                zoomDiv.removeEventListener('wheel', handleZoom);
             }
             if (moveDiv) {
-                document.removeEventListener("mousemove", handleMouseMove)
+                moveDiv.removeEventListener("mousemove", handleMouseMove)
             }
         }
     })

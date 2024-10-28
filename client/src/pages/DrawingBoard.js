@@ -6,8 +6,11 @@ import { getCursorPosInCanvas } from '../utils/TransformUtils'
 import canvasCursorImg from '../images/canvasCursor.png'
 import { CELL_SIZE } from "../config/constants"
 import '../css/DrawingBoard.css'
+import { GetUserInfos } from '../utils/UserInfos'
+import { useNavigate } from 'react-router-dom'
 
 const DrawingBoard = () => {
+  const navigate = useNavigate()
   const [isLoaded, setLoaded] = useState(false)
 
   useEffect(() => {
@@ -36,7 +39,11 @@ const DrawingBoard = () => {
       if(Math.abs(e.clientX - downClickPos.pos_x) < 5 && Math.abs(e.clientY === downClickPos.pos_y) < 5)
         if(clickPosInCanvas.pos_x >= 0 && clickPosInCanvas.pos_x <= canvas.width)
           if(clickPosInCanvas.pos_y >= 0 && clickPosInCanvas.pos_y <= canvas.height)
-            OnClickInCanvas(canvas, e, socket)
+            if(GetUserInfos().isLogged)
+              OnClickInCanvas(canvas, e, socket)
+            else
+              navigate('/login')
+
     };
 
     const handleMouseMove = (e) => {

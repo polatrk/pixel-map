@@ -23,7 +23,7 @@ const ColorPalette = () => {
 
 
   return (
-    <div className="palette-container bot-left">
+    <div className="palette-container bot">
       {Array.isArray(palette) ? (
         palette.map(color => {
           return <div 

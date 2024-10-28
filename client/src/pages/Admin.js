@@ -96,13 +96,13 @@ const Admin = () => {
             <input value={size.y} onChange={e => setSize({ ...size, y: parseInt(e.target.value) })} />
             <button onClick={saveSize}>Save</button>            
         </div>
-        <div id='palette-panel'>
+        <div className='palette-panel'>
             <h1>Palette</h1>
             <div className='palette-editor'>
-                <div className="palette-container">
+                <div className="palette-container_admin">
                     {palette.map((color, index) => {
                     return <div 
-                    id="color-choice" 
+                    className="color-choice_admin" 
                     key={color} 
                     style={{backgroundColor: color}} 
                     onClick={() => removeColor(color)}

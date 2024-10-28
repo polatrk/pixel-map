@@ -21,8 +21,8 @@ const saveCell = async (req, res) => {
 
         if(foundCell) {
             foundCell.color = _color
-            foundCell.save()
-            res.status(200).send(foundCell);
+            await foundCell.save()
+            return res.status(200).send(foundCell);
         }
         else {
             const newCell = await Cells.create({
@@ -30,13 +30,11 @@ const saveCell = async (req, res) => {
                 pos_y: _pos_y,
                 color: _color
             });
-            
-            newCell.save()
-            res.status(201).send(newCell);
+            return res.status(201).send(newCell);
         }
     } catch(error) {
         console.log('error', error)
-        res.status(400).send(error)
+        return res.status(400).send(error)
     }
 }
 

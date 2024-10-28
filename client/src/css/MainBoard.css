@@ -5,6 +5,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: #F3F3F3; 
 }
 
 .color-palette,
@@ -16,7 +17,7 @@
     position: relative;
     margin-inline: auto; 
     width: fit-content;
-    border: 2px solid;
+    border: 10px solid;
 }
 #zoom-controller {
     position: absolute;

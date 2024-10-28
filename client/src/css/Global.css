@@ -5,10 +5,8 @@ html, body, #root {
     padding: 0;
 }
 
-.bot-left {
-    left: 2vh;
+.bot {
     bottom: 2vh;
-
     margin: 0;
 
     position: fixed;

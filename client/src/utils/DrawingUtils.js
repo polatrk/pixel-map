@@ -11,7 +11,7 @@ export function DrawSingleCell(_ctx, cellData) {
     _ctx.fillRect(
       cellData.pos_x*CELL_SIZE, // pos x
       cellData.pos_y*CELL_SIZE, // pos y
-      20, // width
-      20  // height
+      CELL_SIZE, // width
+      CELL_SIZE  // height
     )
   }
