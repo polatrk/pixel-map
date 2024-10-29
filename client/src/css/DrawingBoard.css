@@ -1,6 +1,7 @@
 #drawing-board,
 #canvas-cursor {    
     image-rendering: pixelated;
+    cursor: none;
 }
 
 #cell {
