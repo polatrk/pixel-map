@@ -1,7 +1,6 @@
 #drawing-board,
 #canvas-cursor {    
     image-rendering: pixelated;
-    cursor: none;
 }
 
 #cell {
@@ -17,4 +16,11 @@
 #canvas-cursor {
     position: absolute;
     pointer-events: none;
+
+    /* disable image selection so user can click multiple times without highlighting the image */
+    -khtml-user-select: none;
+    -o-user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
 }
