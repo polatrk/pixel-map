@@ -7,10 +7,8 @@ import canvasCursorImg from '../images/canvasCursor.png'
 import { CELL_SIZE } from "../config/constants"
 import '../css/DrawingBoard.css'
 import { GetUserInfos } from '../utils/UserInfos'
-import { useNavigate } from 'react-router-dom'
 
-const DrawingBoard = () => {
-  const navigate = useNavigate()
+const DrawingBoard = ({toggleLoginModal}) => {
   const [isLoaded, setLoaded] = useState(false)
 
   useEffect(() => {
@@ -42,7 +40,7 @@ const DrawingBoard = () => {
             if(GetUserInfos().isLogged)
               OnClickInCanvas(canvas, e, socket)
             else
-              navigate('/login')
+            toggleLoginModal()
 
     };
 

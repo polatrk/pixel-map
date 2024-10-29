@@ -13,11 +13,12 @@ const verifyAdminJWT = (req, res, next) => {
         token,
         process.env.ACCESS_TOKEN_SECRET,
         (err, decoded) => {
+            console.log(decoded)
             if(err)
                 res.status(403).json({message: err})
 
-            req.email = decoded.UserInfos.email
-            req.role = decoded.UserInfos.role
+            req.email = decoded.email
+            req.role = decoded.role
 
             if(req.role !== 'admin')
                 return res.status(403).json({message: 'Forbidden, only for admin'})

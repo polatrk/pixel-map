@@ -1,11 +1,26 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import DrawingBoard from './DrawingBoard'
 import ColorPalette from './components/ColorPalette'
 import { ControlZoom, ControlMove, getCursorPosInCanvas } from '../utils/TransformUtils'
 import '../css/MainBoard.css'
 import Header from './components/Header'
+import Login from './components/modal/Login'
+import Signup from './components/modal/Signup'
 
 const MainBoard = () => {
+    // modal related
+    const [isLoginModalOpen, setLoginModalOpen] = useState(false);
+    const [isSignupModalOpen, setSignupModalOpen] = useState(false);
+
+    const toggleLoginModal = () => {
+        setSignupModalOpen(false)
+        setLoginModalOpen(!isLoginModalOpen)
+    }
+    const toggleSignupModal = () => {
+        setLoginModalOpen(false)
+        setSignupModalOpen(!isSignupModalOpen)
+    }
+
     useEffect(() => {
         const zoomDiv = document.querySelector("#zoom-controller")
         const moveDiv = document.querySelector("#move-controller")
@@ -36,14 +51,18 @@ const MainBoard = () => {
                 moveDiv.removeEventListener("mousemove", handleMouseMove)
             }
         }
-    })
+    }, [])
 
   return (
     <div className='main-board'>
-        <Header className='header'/>
+        {/* modals */}
+        <Login isModalOpen={isLoginModalOpen} toggleLoginModal={toggleLoginModal} />
+        <Signup isModalOpen={isSignupModalOpen} toggleSignupModal={toggleSignupModal} toggleLoginModal={toggleLoginModal}/>
+
+        <Header className='header' toggleLoginModal={toggleLoginModal} toggleSignupModal={toggleSignupModal} />
         <div id='zoom-controller'>
             <div id='move-controller'>
-                <DrawingBoard />
+                <DrawingBoard toggleLoginModal={toggleLoginModal}/>
             </div>
         </div>
 
