@@ -3,7 +3,7 @@ import { GetUserInfos } from '../../utils/UserInfos'
 import '../../css/Header.css'
 import { logout } from '../../utils/AuthUtils'
 
-const Header = ({toggleLoginModal, toggleSignupModal}) => {
+const Header = ({toggleLoginModal, toggleSignupModal, toggleProfileModal}) => {
     const [isLogged, setIsLogged] = useState()
 
     useEffect(() => {
@@ -29,7 +29,7 @@ const Header = ({toggleLoginModal, toggleSignupModal}) => {
     <div className='header-container top-right'>
         {isLogged ? (
             <>
-                {/* <button type='button' className='btn btn-dark' onClick={() => navigate('/profile')}>Profile</button> */}
+                <button type='button' className='btn btn-dark' onClick={toggleProfileModal}>Profile</button>
                 <button type='button' className='btn btn-dark' onClick={tryLogout}>Logout</button>
             </>
         ) : (

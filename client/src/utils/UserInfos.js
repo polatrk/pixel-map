@@ -7,6 +7,7 @@ export function GetUserInfos() {
     let username
     let email
     let role
+    let id
 
     if(!token)
         return { isLogged }
@@ -16,7 +17,8 @@ export function GetUserInfos() {
     username = decoded.username
     email = decoded.email
     role = decoded.role
+    id = decoded.id
     isLogged = true
 
-    return { username, email, role, isLogged }
+    return { username, email, role, id, isLogged }
 }

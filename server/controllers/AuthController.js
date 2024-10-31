@@ -21,25 +21,26 @@ const login = async (req, res) => {
                 if(result) {
                     const accessToken = jwt.sign(
                         {
+                            id: user.id,
                             email: user.email,
                             username: user.username,
                             role: user.role
                         },
                         process.env.ACCESS_TOKEN_SECRET,
-                        { expiresIn: '5s' }
+                        { expiresIn: '15m' }
                     )
 
                     const refreshToken = jwt.sign(
                         { email: user.email },
                         process.env.REFRESH_TOKEN_SECRET,
-                        { expiresIn: '11s' }
+                        { expiresIn: '8h' }
                     )
 
                     res.cookie('jwt', refreshToken, {
                         httpOnly: true,
                         secure: process.env.NODE_ENV === 'production',
                         sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
-                        maxAge: 11000
+                        maxAge: 8 * 60 * 1000
                     })
 
                     res.json({accessToken})
@@ -78,12 +79,13 @@ const refresh = (req, res) => {
 
                 const accessToken = jwt.sign(
                     {
+                        id: user.id,
                         email: foundUser.email,
                         username: foundUser.username,
                         role: foundUser.role
                     },
                     process.env.ACCESS_TOKEN_SECRET,
-                    { expiresIn: '5s' }
+                    { expiresIn: '15m' }
                 )
 
             res.json({ accessToken })

@@ -1,4 +1,3 @@
-import axiosInstance from '../../../axiosInstance'
 import "../../../css/Modal.css"
 import { login } from '../../../utils/AuthUtils'
 import Modal from './Modal'

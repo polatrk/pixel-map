@@ -18,10 +18,12 @@ app.use(express.urlencoded({ extended: true }));
 const cellsRouter = require(path.join(__dirname, 'routes', 'CellsRoutes'))
 const propertiesRouter = require(path.join(__dirname, 'routes', 'PropertiesRoutes'))
 const authRouter = require(path.join(__dirname, 'routes', 'AuthRoutes'))
+const usersRouter = require(path.join(__dirname, 'routes', 'UsersRoutes'))
 
 app.use('/cells', cellsRouter);
 app.use('/properties', propertiesRouter);
 app.use('/auth', authRouter);
+app.use('/users', usersRouter);
 
 const server = app.listen(3001)
 

@@ -6,19 +6,29 @@ import '../css/MainBoard.css'
 import Header from './components/Header'
 import Login from './components/modal/Login'
 import Signup from './components/modal/Signup'
+import Profile from './components/modal/Profile'
 
 const MainBoard = () => {
     // modal related
     const [isLoginModalOpen, setLoginModalOpen] = useState(false);
     const [isSignupModalOpen, setSignupModalOpen] = useState(false);
+    const [isProfileModalOpen, setProfileModalOpen] = useState(false);
 
     const toggleLoginModal = () => {
         setSignupModalOpen(false)
+        setProfileModalOpen(false)
         setLoginModalOpen(!isLoginModalOpen)
     }
     const toggleSignupModal = () => {
         setLoginModalOpen(false)
+        setProfileModalOpen(false)
         setSignupModalOpen(!isSignupModalOpen)
+    }
+    const toggleProfileModal = () => {
+        console.log('aaaaaaljkbdbb')
+        setLoginModalOpen(false)
+        setSignupModalOpen(false)
+        setProfileModalOpen(!isProfileModalOpen)
     }
 
     useEffect(() => {
@@ -58,8 +68,9 @@ const MainBoard = () => {
         {/* modals */}
         <Login isModalOpen={isLoginModalOpen} toggleLoginModal={toggleLoginModal} />
         <Signup isModalOpen={isSignupModalOpen} toggleSignupModal={toggleSignupModal}/>
+        <Profile isModalOpen={isProfileModalOpen} toggleProfileModal={toggleProfileModal}/>
 
-        <Header className='header' toggleLoginModal={toggleLoginModal} toggleSignupModal={toggleSignupModal} />
+        <Header className='header' toggleLoginModal={toggleLoginModal} toggleSignupModal={toggleSignupModal} toggleProfileModal={toggleProfileModal} />
         <div id='zoom-controller'>
             <div id='move-controller'>
                 <DrawingBoard toggleLoginModal={toggleLoginModal}/>
