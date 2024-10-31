@@ -1,11 +1,12 @@
 const Users = require('../models/Users');
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const asynchHandler = require('express-async-handler')
 
 const login = async (req, res) => {
     const cookies = req.cookies
     if(cookies?.jwt)
-        return res.sendStatus(409).send({"error": "a session is already active"})
+        return res.sendStatus(409).send({message: "a session is already active"})
 
     try {
         const { _email, _password } = req.body
@@ -21,33 +22,74 @@ const login = async (req, res) => {
                     const accessToken = jwt.sign(
                         {
                             email: user.email,
-                            role: user.role,
-                            username: user.username
+                            username: user.username,
+                            role: user.role
                         },
                         process.env.ACCESS_TOKEN_SECRET,
-                        { expiresIn: '1d' }
+                        { expiresIn: '5s' }
                     )
 
-                    res.cookie('jwt', accessToken, {
+                    const refreshToken = jwt.sign(
+                        { email: user.email },
+                        process.env.REFRESH_TOKEN_SECRET,
+                        { expiresIn: '11s' }
+                    )
+
+                    res.cookie('jwt', refreshToken, {
                         httpOnly: true,
                         secure: process.env.NODE_ENV === 'production',
                         sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
-                        maxAge: 24 * 60 * 60 * 1000
+                        maxAge: 11000
                     })
 
                     res.json({accessToken})
                 } else {
-                    res.status(401).send({"error": "email ou password incorrect"});
+                    res.status(401).send({message: "email ou password incorrect"});
                 }
             })
         } else {
-            res.status(401).send({"error": "email or password incorrect"});
+            res.status(401).send({message: "email or password incorrect"});
         }
         }
+        else
+            res.status(401).send({message: "all fields are required"});
     } catch (error) {
-        res.status(400).send({"error": error})
+        res.status(400).send({message: error})
     }
 };
+
+const refresh = (req, res) => {
+    const cookies = req.cookies
+    console.log(cookies)
+    if(!cookies?.jwt)
+        return res.status(401).json({message: 'Unothaurized'})
+
+    const refreshToken = cookies.jwt
+
+    jwt.verify(
+        refreshToken,
+        process.env.REFRESH_TOKEN_SECRET,
+        asynchHandler(async (err, decoded) => {
+            if (err) return res.status(403).json({ message: 'Forbidden' })
+
+            const foundUser = await Users.findOne({ username: decoded.username })
+
+            if (!foundUser) return res.status(400).json({ message: 'Unauthorized' })
+
+                const accessToken = jwt.sign(
+                    {
+                        email: foundUser.email,
+                        username: foundUser.username,
+                        role: foundUser.role
+                    },
+                    process.env.ACCESS_TOKEN_SECRET,
+                    { expiresIn: '5s' }
+                )
+
+            res.json({ accessToken })
+        })
+    )
+}
 
 const logout = (req, res) => {
     const cookies = req.cookies
@@ -73,7 +115,7 @@ const signup = async (req, res) => {
                 }
             })
             if(existingUser != null)
-                res.status(400).send({"error": "email is already associated with an account"});
+                res.status(400).send({message: "email is already associated with an account"});
             else {
                 bcrypt.hash(_password, 10).then((hash) => {
                     const newUser = Users.create({
@@ -89,7 +131,7 @@ const signup = async (req, res) => {
             }
         }
     } catch (error) {
-        res.status(400).send({"error": error.message})
+        res.status(400).send({message: error.message})
     }
 };
 
@@ -97,5 +139,6 @@ const signup = async (req, res) => {
 module.exports = {
     login,
     logout,
+    refresh,
     signup
 };

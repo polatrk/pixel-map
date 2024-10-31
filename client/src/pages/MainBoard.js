@@ -57,7 +57,7 @@ const MainBoard = () => {
     <div className='main-board'>
         {/* modals */}
         <Login isModalOpen={isLoginModalOpen} toggleLoginModal={toggleLoginModal} />
-        <Signup isModalOpen={isSignupModalOpen} toggleSignupModal={toggleSignupModal} toggleLoginModal={toggleLoginModal}/>
+        <Signup isModalOpen={isSignupModalOpen} toggleSignupModal={toggleSignupModal}/>
 
         <Header className='header' toggleLoginModal={toggleLoginModal} toggleSignupModal={toggleSignupModal} />
         <div id='zoom-controller'>

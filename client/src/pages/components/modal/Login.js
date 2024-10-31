@@ -1,30 +1,20 @@
 import axiosInstance from '../../../axiosInstance'
 import "../../../css/Modal.css"
+import { login } from '../../../utils/AuthUtils'
 import Modal from './Modal'
 
 const Login = ({ isModalOpen, toggleLoginModal }) => {
-    const login = (e) => {
-        const email = document.getElementById('emailInput').value
-        const password = document.getElementById('passwordInput').value
+    const tryLogin = (e) => {
+      const loginResult = login(e)
 
-        e.preventDefault()
-        const data = {
-            _email: email,
-            _password: password
-        }
-        
-        axiosInstance.post('/auth/login', data)
-        .then((response) => {
-            localStorage.setItem('accessToken', response.data.accessToken)
-            toggleLoginModal()
-            window.dispatchEvent(new Event('userStatusChange'));
-          })
-        .catch((err) => {
-          if(err.response)
-            alert("Error: " + err.response.data.error);
+        if(loginResult === true)
+          toggleLoginModal()
+        else {
+          if(loginResult.response)
+            alert("Error: " + loginResult.response.data.error);
           else
-            console.log(err)
-        })
+            console.log(loginResult)
+        }
     }
 
   return (
@@ -38,7 +28,7 @@ const Login = ({ isModalOpen, toggleLoginModal }) => {
           <input required type='password' className='form-control' id='passwordInput' placeholder='Your password'/>
         </div>
       </form>
-      <button id='btn-submit' className='btn btn-primary' onClick={login}>Login</button>
+      <button id='btn-submit' className='btn btn-primary' onClick={tryLogin}>Login</button>
     </Modal>
   )
 }

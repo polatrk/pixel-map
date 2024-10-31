@@ -40,7 +40,7 @@ const DrawingBoard = ({toggleLoginModal}) => {
             if(GetUserInfos().isLogged)
               OnClickInCanvas(canvas, e, socket)
             else
-            toggleLoginModal()
+              toggleLoginModal()
 
     };
 

@@ -17,10 +17,7 @@ const verifyAdminJWT = (req, res, next) => {
             if(err)
                 res.status(403).json({message: err})
 
-            req.email = decoded.email
-            req.role = decoded.role
-
-            if(req.role !== 'admin')
+            if(decoded.role !== 'admin')
                 return res.status(403).json({message: 'Forbidden, only for admin'})
 
             next()

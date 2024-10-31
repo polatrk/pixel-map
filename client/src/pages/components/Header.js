@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { GetUserInfos } from '../../utils/UserInfos'
 import '../../css/Header.css'
-import axiosInstance from '../../axiosInstance'
+import { logout } from '../../utils/AuthUtils'
 
 const Header = ({toggleLoginModal, toggleSignupModal}) => {
     const [isLogged, setIsLogged] = useState()
@@ -16,18 +16,13 @@ const Header = ({toggleLoginModal, toggleSignupModal}) => {
         window.addEventListener('userStatusChange', updateLoginState);
     }, [])
 
-    const logout = () => {
-        axiosInstance.post('/auth/logout')
-        .then((response) => {
-            localStorage.removeItem('accessToken')
-            window.dispatchEvent(new Event('userStatusChange'));
-          })
-        .catch((err) => {
-          if(err.response)
-            alert("Error: " + err.response.data.error);
-          else
-            console.log(err)
-        })
+    const tryLogout = (e) => {
+      const loginResult = logout(e)
+      if(loginResult !== true)
+        if(loginResult.response)
+          alert("Error: " + loginResult.response.data.error);
+        else
+          console.log(loginResult)
     }
 
   return (
@@ -35,7 +30,7 @@ const Header = ({toggleLoginModal, toggleSignupModal}) => {
         {isLogged ? (
             <>
                 {/* <button type='button' className='btn btn-dark' onClick={() => navigate('/profile')}>Profile</button> */}
-                <button type='button' className='btn btn-dark' onClick={logout}>Logout</button>
+                <button type='button' className='btn btn-dark' onClick={tryLogout}>Logout</button>
             </>
         ) : (
             <>
