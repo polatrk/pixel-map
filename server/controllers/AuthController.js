@@ -40,7 +40,7 @@ const login = async (req, res) => {
                         httpOnly: true,
                         secure: process.env.NODE_ENV === 'production',
                         sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
-                        maxAge: 8 * 60 * 1000
+                        maxAge: 8 * 60 *60 * 1000
                     })
 
                     res.json({accessToken})
@@ -61,7 +61,6 @@ const login = async (req, res) => {
 
 const refresh = (req, res) => {
     const cookies = req.cookies
-    console.log(cookies)
     if(!cookies?.jwt)
         return res.status(401).json({message: 'Unothaurized'})
 
@@ -79,7 +78,7 @@ const refresh = (req, res) => {
 
                 const accessToken = jwt.sign(
                     {
-                        id: user.id,
+                        id: foundUser.id,
                         email: foundUser.email,
                         username: foundUser.username,
                         role: foundUser.role

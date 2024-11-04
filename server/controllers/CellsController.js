@@ -1,4 +1,5 @@
 const Cells = require('../models/Cells');
+const Users = require('../models/Users');
 
 const findAll = async (req, res) => {
     try {
@@ -11,34 +12,56 @@ const findAll = async (req, res) => {
 
 const saveCell = async (req, res) => {
     try {
-        const { _pos_x, _pos_y, _color } = req.body
+        const { pos_x, pos_y, color, modified_by } = req.body;
         const foundCell = await Cells.findOne({
             where: {
-                pos_x: _pos_x,
-                pos_y: _pos_y
-            }
-        })
+                pos_x: pos_x,
+                pos_y: pos_y
+            }})
 
-        if(foundCell) {
-            foundCell.color = _color
-            await foundCell.save()
+        if (foundCell) {
+            foundCell.color = color;
+            foundCell.modified_by = modified_by;
+        
+            await foundCell.save();
             return res.status(200).send(foundCell);
-        }
-        else {
+        } else {
             const newCell = await Cells.create({
-                pos_x: _pos_x,
-                pos_y: _pos_y,
-                color: _color
+                pos_x: pos_x,
+                pos_y: pos_y,
+                color: color,
+                modified_by: modified_by
             });
             return res.status(201).send(newCell);
         }
-    } catch(error) {
-        console.log('error', error)
-        return res.status(400).send(error)
+    } catch (error) {
+        console.log('Error:', error);
+        return res.status(400).send(error);
+    }
+};
+
+const getCellInfos = async (req, res) => {
+    try {
+        const pos = JSON.parse(decodeURIComponent(req.params.pos));
+        const foundCell = await Cells.findOne({
+            where: {
+                pos_x: pos.pos_x,
+                pos_y: pos.pos_y
+            },
+            include: {
+                model: Users,
+                attributes: ['username'],
+                required: false
+        }})
+
+        res.status(200).send(foundCell)
+    } catch (error) {
+        
     }
 }
 
 module.exports = {
     findAll,
-    saveCell
+    saveCell,
+    getCellInfos
 };

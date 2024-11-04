@@ -16,17 +16,19 @@ const Header = ({toggleLoginModal, toggleSignupModal, toggleProfileModal}) => {
         window.addEventListener('userStatusChange', updateLoginState);
     }, [])
 
-    const tryLogout = (e) => {
-      const loginResult = logout(e)
-      if(loginResult !== true)
-        if(loginResult.response)
-          alert("Error: " + loginResult.response.data.error);
-        else
-          console.log(loginResult)
+    const tryLogout = async (e) => {
+      e.preventDefault()
+  
+      const logoutError = await logout(e)
+  
+      if(logoutError) {
+        alert(logoutError)
+        return
+      }
     }
 
   return (
-    <div className='header-container top-right'>
+    <div className='header-container top right'>
         {isLogged ? (
             <>
                 <button type='button' className='btn btn-dark' onClick={toggleProfileModal}>Profile</button>

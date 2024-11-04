@@ -1,56 +1,66 @@
 import axiosInstance from "../axiosInstance";
 
-export const logout = () => {
-    axiosInstance.post('/auth/logout')
-    .then((response) => {
+export const logout = async (e) => {
+    e.preventDefault()
+    
+    try {
+        await axiosInstance.post('/auth/logout');
         localStorage.removeItem('accessToken')
         window.dispatchEvent(new Event('userStatusChange'));
-    })
-    .catch((err) => {
-      return err
-    })
-
-    return true
+        return null;
+    } catch (err) {
+        if (err.response?.data?.message) {
+            return err.response.data.message;
+        }
+        return "An unknown error occurred";
+    }
 }
 
-export const login = (e) => {
-    const email = document.getElementById('emailInput').value
-    const password = document.getElementById('passwordInput').value
+export const login = async (e) => {
+    e.preventDefault();
 
-    e.preventDefault()
+    const email = document.getElementById('emailInput').value;
+    const password = document.getElementById('passwordInput').value;
+
     const data = {
         _email: email,
         _password: password
-    }
-    
-    axiosInstance.post('/auth/login', data)
-    .then((response) => {
-        localStorage.setItem('accessToken', response.data.accessToken)
-        window.dispatchEvent(new Event('userStatusChange'));
-    })
-    .catch((err) => {
-        return err
-    })
-    return true
-}
+    };
 
-export const signup = (e) => {
+    try {
+        const response = await axiosInstance.post('/auth/login', data);
+        localStorage.setItem('accessToken', response.data.accessToken);
+        window.dispatchEvent(new Event('userStatusChange'));
+        return null;
+    } catch (err) {
+        if (err.response?.data?.message) {
+            return err.response.data.message;
+        }
+        return "An unknown error occurred";
+    }
+};
+
+
+export const signup = async (e) => {
+    e.preventDefault()
+
     const username = document.getElementById('usernameInput').value
     const email = document.getElementById('emailInput').value
     const password = document.getElementById('passwordInput').value
 
-    e.preventDefault()
     const data = {
         _username: username,
         _email: email,
         _password: password
     }
     
-    axiosInstance.post('/auth/signup', data)
-    .then((response) => {
-      })
-    .catch((err) => {
-      return err
-    })
-    return true
+    try {
+        await axiosInstance.post('/auth/signup', data);
+        return null;
+    } catch (err) {
+        if (err.response?.data?.message) {
+            return err.response.data.message;
+        }
+        return "An unknown error occurred";
+    }
 }

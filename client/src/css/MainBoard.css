@@ -8,10 +8,11 @@
     background-color: #F3F3F3; 
 }
 
-.color-palette,
+/* .color-palette,
+.cell-infos,
 .header {
     position: absolute;
-}
+} */
 
 #move-controller {
     position: relative;

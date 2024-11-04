@@ -1,14 +1,21 @@
-import { useEffect, useState } from 'react'
+import { memo, useEffect, useState } from 'react'
 import '../../css/ColorPalette.css'
 import axiosInstance from '../../axiosInstance'
 
 const ColorPalette = () => {
     const [palette, setPalette] = useState()
-    
+    let currentSelectedColor = null
+
     // Set default color
     localStorage.setItem('selectedColor', "#000")
 
-    function handleColorClick(color) {
+    function handleColorClick(e, color) {
+      if(currentSelectedColor)
+        currentSelectedColor.style.border = ''
+
+      currentSelectedColor = e.target
+      currentSelectedColor.style.border = '3px, solid, black'
+      
       localStorage.setItem('selectedColor', color)
     }
 
@@ -28,8 +35,8 @@ const ColorPalette = () => {
         palette.map(color => {
           return <div 
           className="color-choice" 
-          key={color} style={{backgroundColor: color}} 
-          onClick={() => handleColorClick(color)}
+          key={color} style={{backgroundColor: color, backgroundImage: 'none'}} 
+          onClick={(e) => handleColorClick(e, color)}
           />
       })
     ) : (
@@ -39,4 +46,4 @@ const ColorPalette = () => {
   )
 }
 
-export default ColorPalette
+export default memo(ColorPalette)

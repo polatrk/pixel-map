@@ -2,7 +2,7 @@ const express = require('express');
 const WebSocket = require('ws')
 const path = require('path');
 const cors = require('cors')
-var cookieParser = require('cookie-parser');
+const cookieParser = require('cookie-parser');
 require('dotenv').config();
 
 const app = express();
@@ -24,7 +24,7 @@ app.use('/cells', cellsRouter);
 app.use('/properties', propertiesRouter);
 app.use('/auth', authRouter);
 app.use('/users', usersRouter);
-
+    
 const server = app.listen(3001)
 
 const wsserver = new WebSocket.Server({server})

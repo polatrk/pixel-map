@@ -3,18 +3,17 @@ import { signup } from '../../../utils/AuthUtils'
 import Modal from './Modal'
 
 const Signup = ({ isModalOpen, toggleSignupModal}) => {
-
-    const trySignup = (e) => {
-      const signupResult = signup(e)
-
-        if(signupResult === true)
-          toggleSignupModal()
-        else {
-          if(signupResult.response)
-            alert("Error: " + signupResult.response.data.error);
-          else
-            console.log(signupResult)
-        }
+    const trySignup = async (e) => {
+      e.preventDefault()
+  
+      const signupError = await signup(e)
+  
+      if(signupError) {
+        alert(signupError)
+        return
+      }
+  
+      toggleSignupModal()
     }
 
   return (

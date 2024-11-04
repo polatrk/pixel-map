@@ -7,12 +7,15 @@ import Header from './components/Header'
 import Login from './components/modal/Login'
 import Signup from './components/modal/Signup'
 import Profile from './components/modal/Profile'
+import CellInfos from './components/CellInfos'
+import { CELL_SIZE } from '../config/constants'
 
 const MainBoard = () => {
     // modal related
     const [isLoginModalOpen, setLoginModalOpen] = useState(false);
     const [isSignupModalOpen, setSignupModalOpen] = useState(false);
     const [isProfileModalOpen, setProfileModalOpen] = useState(false);
+    const [cursorPos, setCursorPos] = useState({});
 
     const toggleLoginModal = () => {
         setSignupModalOpen(false)
@@ -25,7 +28,6 @@ const MainBoard = () => {
         setSignupModalOpen(!isSignupModalOpen)
     }
     const toggleProfileModal = () => {
-        console.log('aaaaaaljkbdbb')
         setLoginModalOpen(false)
         setSignupModalOpen(false)
         setProfileModalOpen(!isProfileModalOpen)
@@ -34,12 +36,28 @@ const MainBoard = () => {
     useEffect(() => {
         const zoomDiv = document.querySelector("#zoom-controller")
         const moveDiv = document.querySelector("#move-controller")
+        const canvas = moveDiv.querySelector("#drawing-board")
 
         let bIsMouseDown = false
         let clickPosInCanvas = {pos_x: 0, pos_y: 0}
+        let lastHoveredCellPos = {pos_x: 0, pos_y: 0}
 
         const handleZoom = (e) => ControlZoom(e, zoomDiv)
-        const handleMouseMove = (e) => {if(bIsMouseDown) {ControlMove(e, moveDiv, clickPosInCanvas)}}
+        const handleMouseMove = (e) => {
+            if(bIsMouseDown)
+                ControlMove(e, moveDiv, clickPosInCanvas)
+
+            // for cell infos
+            const cursorPos = getCursorPosInCanvas({pos_x: e.clientX, pos_y: e.clientY}, canvas)
+            const cellPos = {
+                pos_x: Math.floor(cursorPos.pos_x / CELL_SIZE),
+                pos_y: Math.floor(cursorPos.pos_y / CELL_SIZE),
+              }
+            if(cellPos.pos_x !== lastHoveredCellPos.pos_x || cellPos.pos_y !== lastHoveredCellPos.pos_y) {
+                setCursorPos(getCursorPosInCanvas({pos_x: e.clientX, pos_y: e.clientY}, canvas))
+                lastHoveredCellPos = cellPos
+            }
+        }
 
         if (zoomDiv)
             zoomDiv.addEventListener('wheel', handleZoom);
@@ -48,7 +66,7 @@ const MainBoard = () => {
             moveDiv.addEventListener("mouseup", () => {bIsMouseDown = false})
             moveDiv.addEventListener("mousedown", (e) => {
                 bIsMouseDown = true
-                clickPosInCanvas = getCursorPosInCanvas({pos_x: e.clientX, pos_y: e.clientY}, moveDiv.querySelector("#drawing-board"))
+                clickPosInCanvas = getCursorPosInCanvas({pos_x: e.clientX, pos_y: e.clientY}, canvas)
             })
         }
 
@@ -78,6 +96,7 @@ const MainBoard = () => {
         </div>
 
         <ColorPalette className="color-palette"/>
+        <CellInfos cursorPos={cursorPos} className="cell-infos"/>
     </div>
   )
 }

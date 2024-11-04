@@ -90,7 +90,7 @@ const DrawingBoard = ({toggleLoginModal}) => {
       console.error("Error:", error);
     });
 
-    // cleanup
+    // claenup
     return () => {
       canvas.removeEventListener('mouseup', handleClickOnCanvas); // else it trigger two times
       socket.close()

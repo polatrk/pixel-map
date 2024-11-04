@@ -10,7 +10,6 @@ const checkAuthorization = (req, userID) => {
             token,
             process.env.ACCESS_TOKEN_SECRET,
             (err, decoded) => {
-                console.log(decoded)
                 if(err) {
                     console.log(err)
                     return false

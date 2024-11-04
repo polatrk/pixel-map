@@ -3,18 +3,18 @@ import { login } from '../../../utils/AuthUtils'
 import Modal from './Modal'
 
 const Login = ({ isModalOpen, toggleLoginModal }) => {
-    const tryLogin = (e) => {
-      const loginResult = login(e)
+  const tryLogin = async (e) => {
+    e.preventDefault()
 
-        if(loginResult === true)
-          toggleLoginModal()
-        else {
-          if(loginResult.response)
-            alert("Error: " + loginResult.response.data.error);
-          else
-            console.log(loginResult)
-        }
+    const loginError = await login(e)
+
+    if(loginError) {
+      alert("email or password invalid")
+      return
     }
+
+      toggleLoginModal()
+  }
 
   return (
     <Modal open={isModalOpen} toggleModal={toggleLoginModal}>

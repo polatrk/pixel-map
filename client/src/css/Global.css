@@ -8,14 +8,24 @@ html, body, #root {
 .bot {
     bottom: 2vh;
     margin: 0;
-
     position: fixed;
 }
 
-.top-right {
-    right: 2vh;
+.top {
     top: 2vh;
-
     margin: 0;
     position: fixed;
 }
+
+.left {
+    left: 2vh;
+    margin: 0;
+    position: fixed;
+}
+
+.right {
+    right: 2vh;
+    margin: 0;
+    position: fixed;
+}
+

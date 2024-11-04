@@ -23,16 +23,12 @@ const update = async (req, res) => {
         if (user) {
             if (email != null) {
                 user.email = email;
-                console.log('EMAILLLLL')
             }
             if (username != null) {
                 user.username = username;
-                console.log('USERNAMMMEEE')
             }
             if (password != null) {
-                bcrypt.hash(password, 10).then((hash) => {
-                    user.password = hash;
-                });
+                user.password = await bcrypt.hash(password, 10)
             }
             user.save();
             res.status(200).send(user)

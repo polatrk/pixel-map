@@ -8,26 +8,26 @@ const Profile = ({ isModalOpen, toggleProfileModal }) => {
     const userInfos = GetUserInfos()
 
     const trySave = (e) => {
-        e.preventDefault()
+      e.preventDefault()
 
-        const username = document.getElementById('usernameInput').value
-        const email = document.getElementById('emailInput').value
-        const password = document.getElementById('passwordInput').value
-        
+      const username = document.getElementById('usernameInput').value
+      const email = document.getElementById('emailInput').value
+      const password = document.getElementById('passwordInput').value
+      
 
-        const data = {
-            username: username,
-            password: password
-        }
+      const data = {
+          username: username,
+          password: password
+      }
 
-        return axiosInstance.post(`/users/${userInfos.id}`, data)
-                .then((response) => {
-                    alert("Profile saved successfully\nPlease login again")
-                    logout()
-                })
-                .catch((err) => {
-                    alert("error while saving profile:", err.message)
-                });
+      return axiosInstance.post(`/users/${userInfos.id}`, data)
+      .then((response) => {
+          alert("Profile saved successfully\nPlease login again")
+          logout()
+      })
+      .catch((err) => {
+          alert("error while saving profile:", err.message)
+      });
     }
 
   return (

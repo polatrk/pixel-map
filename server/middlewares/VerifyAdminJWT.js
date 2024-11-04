@@ -13,7 +13,6 @@ const verifyAdminJWT = (req, res, next) => {
         token,
         process.env.ACCESS_TOKEN_SECRET,
         (err, decoded) => {
-            console.log(decoded)
             if(err)
                 res.status(403).json({message: err})
 
