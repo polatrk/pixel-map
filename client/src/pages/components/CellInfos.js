@@ -5,20 +5,33 @@ import { CELL_SIZE } from "../../config/constants"
 
 const CellInfos = ({ cursorPos }) => {
   const [cellInfos, setCellInfos] = useState(null)
-
+  const [isFetching, setIsFetching] = useState(true)
   const cellPos = {
     pos_x: Math.floor(cursorPos.pos_x / CELL_SIZE),
     pos_y: Math.floor(cursorPos.pos_y / CELL_SIZE),
   }
-
-  const encodedPos = encodeURIComponent(JSON.stringify(cellPos))
   
+  const encodedPos = encodeURIComponent(JSON.stringify(cellPos))
+
   useEffect(() => {
-  axiosInstance.get(`/cells/${encodedPos}`)
-  .then(response => {
-      setCellInfos(response.data)
-  })
-  }, [cellInfos, cursorPos, encodedPos])
+    const interval = setInterval(() => {
+      axiosInstance.get(`/cells/${encodedPos}`)
+        .then(response => {
+          setCellInfos(response.data);
+          setIsFetching(false)
+          clearInterval(interval);
+        })
+        .catch(error => {
+          console.error("Error fetching cell info:", error);
+          clearInterval(interval);
+        });
+    }, 200);
+
+    return () => {
+      clearInterval(interval)
+      setIsFetching(true)
+    }
+  }, [cursorPos, encodedPos])
   
 
   return (
@@ -27,7 +40,7 @@ const CellInfos = ({ cursorPos }) => {
         <p>X: {cellPos ? cellPos.pos_x : "loading..."}</p>
         <p>Y: {cellPos ? cellPos.pos_y : "loading..."}</p>
         <h4>modified by:</h4>
-        <p>{cellInfos ? cellInfos.User.username : "Unknown"}</p>
+        <p>{isFetching ? "loading..." : (cellInfos ? cellInfos.User.username : "Unknown")}</p>
     </div>
   )
 }
