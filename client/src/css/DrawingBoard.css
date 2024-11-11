@@ -11,7 +11,11 @@
 
 #drawing-board {
     background-color: #FFFFFF;
+    display: flex;
+    flex-wrap: wrap;
 }
+
+
 
 #canvas-cursor {
     position: absolute;

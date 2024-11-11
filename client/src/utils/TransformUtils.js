@@ -1,8 +1,9 @@
 import { MAX_ZOOM, MIN_ZOOM } from "../config/constants"
 
-export function getCursorPosInCanvas(clickPos, _canvas) {
-    const canvasBounds = _canvas.getBoundingClientRect()
-    const zoomDiv = _canvas.closest("#zoom-controller")
+export function getCursorPosInCanvas(clickPos) {
+    const zoomDiv = document.getElementById("zoom-controller")
+    const moveDiv = document.getElementById("move-controller")
+    const moveDivBounds = moveDiv.getBoundingClientRect()
 
     // Get float value from scale(9.9999)
     const regex = /scale\(([^)]+)\)/i
@@ -10,9 +11,8 @@ export function getCursorPosInCanvas(clickPos, _canvas) {
     let currentScale = 1
     if(transform !== '')
         currentScale = parseFloat(regex.exec(transform)[1])
-
-    const rel_x = (clickPos.pos_x - canvasBounds.left)/currentScale
-    const rel_y = (clickPos.pos_y - canvasBounds.top)/currentScale
+    const rel_x = (clickPos.pos_x - moveDivBounds.left)/currentScale
+    const rel_y = (clickPos.pos_y - moveDivBounds.top)/currentScale
 
     return {pos_x: Math.floor(rel_x), pos_y: Math.floor(rel_y)}
 }

@@ -22,7 +22,7 @@ const saveCell = async (req, res) => {
         if (foundCell) {
             foundCell.color = color;
             foundCell.modified_by = modified_by;
-        
+            
             await foundCell.save();
             return res.status(200).send(foundCell);
         } else {

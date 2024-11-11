@@ -66,7 +66,7 @@ const MainBoard = () => {
             moveDiv.addEventListener("mouseup", () => {bIsMouseDown = false})
             moveDiv.addEventListener("mousedown", (e) => {
                 bIsMouseDown = true
-                clickPosInCanvas = getCursorPosInCanvas({pos_x: e.clientX, pos_y: e.clientY}, canvas)
+                clickPosInCanvas = getCursorPosInCanvas({pos_x: e.clientX, pos_y: e.clientY})
             })
         }
 

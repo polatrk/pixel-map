@@ -1,15 +1,17 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {  DrawMultipleCells, DrawSingleCell } from '../utils/DrawingUtils'
-import { OnClickInCanvas } from '../utils/DrawingBoardControls'
 import axiosInstance from '../axiosInstance'
 import { getCursorPosInCanvas } from '../utils/TransformUtils'
 import canvasCursorImg from '../images/canvasCursor.png'
-import { CELL_SIZE } from "../config/constants"
+import { CELL_SIZE, CELL_PER_CANVAS } from "../config/constants"
 import '../css/DrawingBoard.css'
 import { GetUserInfos } from '../utils/UserInfos'
+import { OnClickInCanvas } from '../utils/DrawingBoardControls'
 
 const DrawingBoard = ({toggleLoginModal}) => {
   const [isLoaded, setLoaded] = useState(false)
+  const [canvasMatrix, setCanvasMatrix] = useState()
+  const [canvasSize, setCanvasSize] = useState({x: 0, y: 0})
 
   useEffect(() => {
     // create ws connection
@@ -19,67 +21,78 @@ const DrawingBoard = ({toggleLoginModal}) => {
     const socket = new WebSocket(`${socketProtocol}://${process.env.REACT_APP_SERVER_URL.replace(/^.*\/\//, "")}`)
 
     // init variables
-    const canvas = document.querySelector("#drawing-board")
-    const ctx = canvas.getContext('2d')
-    const canvasCursor = document.getElementById('canvas-cursor')
+    const drawingBoard = document.querySelector("#drawing-board")
+    const canvasCursor = document.querySelector('#canvas-cursor')
     let downClickPos = {pos_x: 0, pos_y: 0}
-
-    // handle ws callback
-    socket.onmessage = (e) => {
-      DrawSingleCell(ctx, JSON.parse(e.data))
-    }
 
     // define handler funcs
     const handleClickOnCanvas = (e) => {
-      const clickPosInCanvas = getCursorPosInCanvas({pos_x: e.clientX, pos_y: e.clientY}, canvas)
-
       // make srue that the canvas isn't moving and we are in bounds
       if(Math.abs(e.clientX - downClickPos.pos_x) < 5 && Math.abs(e.clientY === downClickPos.pos_y) < 5)
-        if(clickPosInCanvas.pos_x >= 0 && clickPosInCanvas.pos_x <= canvas.width)
-          if(clickPosInCanvas.pos_y >= 0 && clickPosInCanvas.pos_y <= canvas.height)
             if(GetUserInfos().isLogged)
-              OnClickInCanvas(canvas, e, socket)
-            else
-              toggleLoginModal()
+              OnClickInCanvas(e, socket, {x: e.target.id[0], y: e.target.id[1]})
 
     };
 
+    // handle ws callback
+    socket.onmessage = (e) => {
+      DrawSingleCell(JSON.parse(e.data))
+    }
+
     const handleMouseMove = (e) => {
-      let {pos_x, pos_y} = getCursorPosInCanvas({pos_x: e.clientX, pos_y: e.clientY}, canvas)
+      let {pos_x, pos_y} = getCursorPosInCanvas({pos_x: e.clientX, pos_y: e.clientY})
 
       // round to the cell size 
-      pos_x = Math.floor(pos_x/CELL_SIZE)*CELL_SIZE
-      pos_y = Math.floor(pos_y/CELL_SIZE)*CELL_SIZE
+      pos_x = (Math.floor(pos_x/CELL_SIZE)*CELL_SIZE)
+      pos_y = (Math.floor(pos_y/CELL_SIZE)*CELL_SIZE)
 
       canvasCursor.style.left = `${pos_x}px`;
       canvasCursor.style.top = `${pos_y}px`;
     }
 
     // add listeners
-    canvas.addEventListener('mouseup', handleClickOnCanvas)
-    canvas.addEventListener('mousedown', (e) => downClickPos = {pos_x: e.clientX, pos_y: e.clientY})
-    canvas.addEventListener('mousemove', handleMouseMove)
-    canvas.addEventListener('mouseenter', () => {
+    drawingBoard.addEventListener('mouseup', handleClickOnCanvas)
+    drawingBoard.addEventListener('mousedown', (e) => downClickPos = {pos_x: e.clientX, pos_y: e.clientY})
+    drawingBoard.addEventListener('mousemove', handleMouseMove)
+    drawingBoard.addEventListener('mouseenter', () => {
       canvasCursor.style.visibility = 'visible'
     })
-    canvas.addEventListener('mouseleave', () => {
+    drawingBoard.addEventListener('mouseleave', () => {
       canvasCursor.style.visibility = 'hidden'
     })
+
 
     // fetch data
     axiosInstance.get('/properties/size') // Fetch size
     .then(response => {
-      setLoaded(true)
+      setCanvasSize({x: response.data.x, y: response.data.y})
 
-      // *(CELL_SIZE/10) to match the possible number of cells on a row or col 
-      canvas.width = response.data.x*(CELL_SIZE/10)
-      canvas.height = response.data.y*(CELL_SIZE/10)
-      canvas.style.visibility = 'visible'
+      let newCanvasMatrix = []
+      for (let indexY = 0; indexY < response.data.y; indexY++) {
+        let row = [];
+        for (let indexX = 0; indexX < response.data.x; indexX++) {
+          row.push(
+            <canvas 
+            width={CELL_PER_CANVAS*CELL_SIZE} height={CELL_PER_CANVAS*CELL_SIZE} 
+            style={{
+              flex: `1 1 ${100 / response.data.x}%`, // 100/rowSize
+            }} 
+            className='single-canvas' 
+            id={`${indexX}${indexY}`} />
+          )
+        }
+        newCanvasMatrix.push(row);
+      
+      }
+      setCanvasMatrix(newCanvasMatrix)
+
+      setLoaded(true)
+      // drawingBoard.style.visibility = 'visible'
 
       // once canvas init
       axiosInstance.get('/cells') // fetch all cells
       .then(response => {
-        DrawMultipleCells(response.data, ctx);
+        DrawMultipleCells(response.data, canvasMatrix);
       })
       .catch(error => {
         console.error("Error:", error);
@@ -92,27 +105,38 @@ const DrawingBoard = ({toggleLoginModal}) => {
 
     // claenup
     return () => {
-      canvas.removeEventListener('mouseup', handleClickOnCanvas); // else it trigger two times
       socket.close()
+      drawingBoard.removeEventListener('mouseup', handleClickOnCanvas);
+      drawingBoard.removeEventListener('mousedown', (e) => downClickPos = {pos_x: e.clientX, pos_y: e.clientY});
+      drawingBoard.removeEventListener('mousemove', handleMouseMove);
     };
-        
-
     }, []);  // empty dependency array to run this effect only once on component mount
 
   return (
-    <>
-        {!isLoaded && (
+    <div style={{width: `${CELL_PER_CANVAS*CELL_SIZE*canvasSize.x}px`}} id='drawing-board'>
+        {!isLoaded ? (
           <h1>Loading...</h1>
-        )}
-        <canvas width={0} height={0} style={{visibility: 'hidden'}} id='drawing-board' />
+        ) : (
+          <>
+            {canvasMatrix.map((row, rowIndex) => (
+              <>
+              {row.map((colCanvas, colIndex) => (
+                <React.Fragment>
+                  {colCanvas}
+                </React.Fragment>
+              ))}
+              </>
+            ))}
+          </>
+        )} 
         <img 
-        src={canvasCursorImg} 
-        alt="Canvas Cursor" 
-        id="canvas-cursor" 
-        style={{visibility: 'hidden'}}
-        width={CELL_SIZE} height={CELL_SIZE} 
-        />
-    </>
+            src={canvasCursorImg} 
+            alt="Canvas Cursor" 
+            id="canvas-cursor" 
+            style={{visibility: 'hidden'}}
+            width={CELL_SIZE} height={CELL_SIZE} 
+            />
+    </div>
   )
 }
 
