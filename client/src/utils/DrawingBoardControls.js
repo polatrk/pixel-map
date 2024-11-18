@@ -11,7 +11,7 @@ export function OnClickInCanvas(event, socket, canvas_pos) {
     // round to the cell size
     cursorPos.pos_x = Math.floor(cursorPos.pos_x/CELL_SIZE)
     cursorPos.pos_y = Math.floor(cursorPos.pos_y/CELL_SIZE)
-    console.log("clicked")
+
     const cellData = {
         pos_x: cursorPos.pos_x,
         pos_y: cursorPos.pos_y,

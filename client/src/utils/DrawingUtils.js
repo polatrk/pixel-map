@@ -2,6 +2,7 @@ import { CELL_SIZE, CELL_PER_CANVAS } from "../config/constants";
 
 export function DrawMultipleCells(_cells) {
     _cells.forEach(cell_data => {
+      console.log("draw:", cell_data.pos_x)
       DrawSingleCell(cell_data)
     });
   }

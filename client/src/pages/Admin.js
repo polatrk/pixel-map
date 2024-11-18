@@ -118,7 +118,6 @@ const Admin = () => {
             </div>
             <button onClick={savePalette}>Save</button>            
         </div>
-
         </>
     )}
     </>
