@@ -31,6 +31,8 @@ const DrawingBoard = ({toggleLoginModal}) => {
       if(Math.abs(e.clientX - downClickPos.pos_x) < 5 && Math.abs(e.clientY === downClickPos.pos_y) < 5)
             if(GetUserInfos().isLogged)
               OnClickInCanvas(e, socket, {x: e.target.id[0], y: e.target.id[1]})
+            else
+              toggleLoginModal();
     };
 
     // handle ws callback
