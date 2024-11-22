@@ -2,11 +2,12 @@ const express = require('express');
 const router = express.Router();
 const cellsController = require('../controllers/CellsController');
 const verifyLoggedJWT = require('../middlewares/VerifyLoggedJWT');
+const rateLimiter = require('../middlewares/RateLimiter');
 
-router.get('/', cellsController.findAll);
-router.get('/:pos', cellsController.getCellInfos);
+router.route('/').get(rateLimiter(100), cellsController.findAll);
+router.route('/:pos').get(cellsController.getCellInfos);
 
 router.use(verifyLoggedJWT)
-router.post('/', cellsController.saveCell);
+router.route('/').post(rateLimiter(1000), cellsController.saveCell);
 
 module.exports = router;

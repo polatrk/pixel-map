@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/AuthController');
+const rateLimiter = require('../middlewares/RateLimiter');
 
-router.post('/signup', authController.signup);
-router.post('/verify', authController.verifyEmail);
-router.post('/login', authController.login);
-router.post('/logout', authController.logout);
-router.post('/refresh', authController.refresh);
+router.route('/signup').post(rateLimiter(5), authController.signup);
+router.route('/verify').post(rateLimiter(5), authController.verifyEmail);
+router.route('/login').post(rateLimiter(5), authController.login);
+router.route('/logout').post(rateLimiter(5), authController.logout);
+router.route('/refresh').post(rateLimiter(5), authController.refresh);
 
 module.exports = router;    

@@ -36,7 +36,7 @@ const CellInfos = ({ cursorPos }) => {
 
   return (
     <div className="cellinfos-container top left">
-        <h4>coords</h4>
+        <h4>Coords</h4>
         <p>X: {cellPos ? cellPos.pos_x : "loading..."}</p>
         <p>Y: {cellPos ? cellPos.pos_y : "loading..."}</p>
         <h4>modified by:</h4>

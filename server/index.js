@@ -9,7 +9,7 @@ const app = express();
 
 app.use(cookieParser());
 app.use(cors({
-  origin: ['http://localhost:3000', 'https://epixel.up.railway.app'],
+  origin: ['http://localhost:3000', 'https://pixelmap.up.railway.app'],
   credentials: true
 }));
 app.use(express.json());
