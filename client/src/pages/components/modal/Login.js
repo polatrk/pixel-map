@@ -9,7 +9,7 @@ const Login = ({ isModalOpen, toggleLoginModal }) => {
     const loginError = await login(e)
 
     if(loginError) {
-      alert("email or password invalid")
+      alert(loginError)
       return
     }
 

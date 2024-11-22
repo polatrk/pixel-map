@@ -55,8 +55,25 @@ export const signup = async (e) => {
     }
     
     try {
-        await axiosInstance.post('/auth/signup', data);
-        return null;
+        const response = await axiosInstance.post('/auth/signup', data);
+        return response.data?.message || "No response";
+    } catch (err) {
+        if (err.response?.data?.message) {
+            return err.response.data.message;
+        }
+        return "An unknown error occurred";
+    }
+}
+
+export const verifyEmail = async () => {
+    const queryParameters = new URLSearchParams(window.location.search)
+    const verifyToken = queryParameters.get("token")
+    
+    try {
+        await axiosInstance.post('/auth/verify', {
+            token: verifyToken
+        });
+        return null
     } catch (err) {
         if (err.response?.data?.message) {
             return err.response.data.message;

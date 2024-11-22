@@ -20,6 +20,9 @@ const Users = sequelize.define(
         },
         role: {
             type: DataTypes.STRING(50)
+        },
+        status: {
+            type: DataTypes.STRING(50)
         }
     }, {
         tableName: 'users',

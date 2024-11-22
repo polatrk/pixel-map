@@ -5,11 +5,15 @@ import Admin from './pages/Admin';
 import ProtectedRoute from './pages/components/ProtectedRoute';
 import Forbidden from './pages/Forbidden';
 import NotFound from './pages/NotFound';
+import VerifiedEmail from './pages/VerifiedEmail';
 
 function App() {
   return (
     <Routes>
       <Route index element={<MainBoard />} />
+
+      <Route path="/verify" element={<VerifiedEmail />} />
+
 
       <Route path='admin'>
           <Route index element={

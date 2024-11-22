@@ -1,6 +1,7 @@
 const Users = require('../models/Users');
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const nodemailer = require('nodemailer')
 const asynchHandler = require('express-async-handler')
 
 const login = async (req, res) => {
@@ -19,6 +20,9 @@ const login = async (req, res) => {
         if(user != null) {
             bcrypt.compare(_password, user.password, (err, result) => {
                 if(result) {
+                    if(user.status === 'INACTIVE')
+                        return res.status(401).send({message: "Please verify your email."})
+
                     const accessToken = jwt.sign(
                         {
                             id: user.id,
@@ -40,20 +44,20 @@ const login = async (req, res) => {
                         httpOnly: true,
                         secure: process.env.NODE_ENV === 'production',
                         sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
-                        maxAge: 8 * 60 *60 * 1000
+                        maxAge: 8 * 60 * 60 * 1000
                     })
 
                     res.json({accessToken})
                 } else {
-                    res.status(401).send({message: "email ou password incorrect"});
+                    res.status(401).send({message: "Email ou password incorrect"})
                 }
             })
         } else {
-            res.status(401).send({message: "email or password incorrect"});
+            res.status(401).send({message: "Email or password incorrect"});
         }
         }
         else
-            res.status(401).send({message: "all fields are required"});
+            res.status(401).send({message: "All fields are required"});
     } catch (error) {
         res.status(400).send({message: error})
     }
@@ -108,38 +112,110 @@ const logout = (req, res) => {
 
 const signup = async (req, res) => {
     try {
-        const { _username, _email, _password } = req.body
-        if(_username != null && _email != null && _password != null) {
-            const existingUser = await Users.findOne({
-                where: {
-                    email: _email
-                }
-            })
-            if(existingUser != null)
-                res.status(400).send({message: "email is already associated with an account"});
-            else {
-                bcrypt.hash(_password, 10).then((hash) => {
-                    const newUser = Users.create({
-                        username: _username,
-                        email: _email,
-                        password: hash,
-                        role: "user"
-                    })
-                    .then(result => {
-                        res.status(200).send(result)
-                    })
-                })
-            }
+        const { _username, _email, _password } = req.body;
+
+        if (!_username || !_email || !_password) {
+            return res.status(400).send({ message: "All fields are required." });
         }
+
+        // Check if the user already exists
+        const existingUser = await Users.findOne({ where: { email: _email } });
+        if (existingUser) {
+            return res.status(400).send({ message: "Email is already associated with an account." });
+        }
+
+        // Hash the password
+        const hashedPassword = await bcrypt.hash(_password, 10);
+
+        // Create the user
+        const createdUser = await Users.create({
+            username: _username,
+            email: _email,
+            password: hashedPassword,
+            role: "USER",
+            status: "INACTIVE"
+        });
+
+        // Generate a verification token
+        const token = jwt.sign(
+            { id: createdUser.id },
+            process.env.VERIFICATION_EMAIL_TOKEN_SECRET
+        );
+
+        // Configure the mail transport
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            port: 465,
+            host: 'smtp.gmail.com',
+            secure: true,
+            auth: {
+                user: process.env.VERIFICATION_EMAIL,
+                pass: process.env.VERIFICATION_EMAIL_PASSWORD
+            }
+        });
+
+        // Create the email configuration
+        const url = process.env.NODE_ENV === 'production' ? process.env.REACT_APP_URL : process.env.REACT_APP_URL_DEV
+        const mailConfiguration = {
+            from: process.env.VERIFICATION_EMAIL,
+            to: createdUser.email,
+            subject: 'Pixel-map Email Verification',
+            text: `${url}/verify/?token=${token}`
+        };
+
+        // Send the verification email
+        await transporter.sendMail(mailConfiguration);
+
+        // Respond to the client
+        return res.status(200).send({ message: "Please click on the link we sent to your email." });
     } catch (error) {
-        res.status(400).send({message: error.message})
+        console.error(error);
+        return res.status(400).send({ message: error.message });
     }
 };
+
+const verifyEmail = async (req, res) => {
+    try {
+        const { token } = req.body;
+        if (!token) {
+            return res.status(498).json({ message: "Invalid token" });
+        }
+
+        jwt.verify(
+            token,
+            process.env.VERIFICATION_EMAIL_TOKEN_SECRET,
+            async (err, decoded) => {
+                if (err) {
+                    return res.status(403).json({ message: "Invalid token" });
+                }
+
+                const foundUser = await Users.findOne({
+                    where: {
+                        id: decoded.id
+                    }
+                });
+
+                if (!foundUser) {
+                    return res.status(404).json({ message: "User not found" });
+                }
+
+                foundUser.status = 'ACTIVE';
+                await foundUser.save();
+
+                return res.status(200).json({ message: "Email verified successfully" });
+            }
+        );
+    } catch (error) {
+        return res.status(500).json({ message: "Error:", error: error.message });
+    }
+};
+
 
 
 module.exports = {
     login,
     logout,
     refresh,
-    signup
+    signup,
+    verifyEmail
 };
