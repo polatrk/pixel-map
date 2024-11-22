@@ -13,6 +13,16 @@ const findAll = async (req, res) => {
 const saveCell = async (req, res) => {
     try {
         const { pos_x, pos_y, color, modified_by } = req.body;
+
+        const modifiedByUser = await Cells.findOne({
+            where: {
+                id: modified_by
+            }})
+
+        if(modifiedByUser != null)
+            if(modifiedByUser.status === 'INACTIVE')
+                return res.status(401).send("User not active")
+
         const foundCell = await Cells.findOne({
             where: {
                 pos_x: pos_x,
