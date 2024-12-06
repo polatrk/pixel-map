@@ -1,71 +1,85 @@
 const Users = require('../models/Users');
-const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
-const { checkAuthorization } = require('../Utils')
+const bcrypt = require('bcrypt');
+const { checkAuthorization } = require('../Utils');
+
+const sendErrorResponse = (res, statusCode, message) => {
+    return res.status(statusCode).json({ message });
+};
 
 const update = async (req, res) => {
     try {
         const id = req.params.id;
 
-        if(!checkAuthorization(req, id))
-            return res.status(401).send({message: "Unhautorized"})
-
-        const {email, username, password} = req.body;
-        const user = await Users.findOne({
-            where: {
-                id: id
-            }
-        });
-
-        username === user.username ? null : username
-        password === user.password ? null : password
-        
-        if (user) {
-            if (email != null) {
-                user.email = email;
-            }
-            if (username != null) {
-                user.username = username;
-            }
-            if (password != null) {
-                user.password = await bcrypt.hash(password, 10)
-            }
-            user.save();
-            res.status(200).send(user)
-
-        } else {
-            res.status(400).send({message: "User not found"})
+        if (!checkAuthorization(req, id)) {
+            return sendErrorResponse(res, 401, "Unauthorized");
         }
+
+        const { email, username, password } = req.body;
+
+        // fetch the user by ID
+        const user = await Users.findOne({ where: { id } });
+
+        if (!user) {
+            return sendErrorResponse(res, 404, "User not found");
+        }
+
+        // udpate fields if they are provided and different
+        if (email && email !== user.email) {
+            user.email = email;
+        }
+
+        if (username && username !== user.username) {
+            user.username = username;
+        }
+
+        if (password) {
+            const isSamePassword = await bcrypt.compare(password, user.password);
+            if (!isSamePassword) {
+                user.password = await bcrypt.hash(password, 10);
+            }
+        }
+
+        await user.save();
+        return res.status(200).json({ message: "User updated successfully", user });
     } catch (error) {
-        res.status(400).send({message: error})
+        console.error("Error updating user:", error);
+        return sendErrorResponse(res, 500, "Error updating user");
     }
-}
+};
 
 const findSingle = async (req, res) => {
     try {
-        const id = req.params.id
+        const id = req.params.id;
 
-        if(!checkAuthorization(req, id))
-            return res.status(401).send({message: "Unhautorized"})
+        if (!checkAuthorization(req, id)) {
+            return sendErrorResponse(res, 401, "Unauthorized");
+        }
 
-        const result = await Users.findOne({where: {id: id}});
-        res.status(200).send(result);
+        const user = await Users.findOne({ where: { id } });
+
+        if (!user) {
+            return sendErrorResponse(res, 404, "User not found");
+        }
+
+        return res.status(200).json(user);
     } catch (error) {
-        console.log("error getting data : ", error);
+        console.error("Error retrieving user:", error);
+        return sendErrorResponse(res, 500, "Error retrieving user");
     }
 };
 
 const findAll = async (req, res) => {
     try {
-        const result = await Users.findAll();
-        res.status(200).send(result);
+        const users = await Users.findAll();
+        return res.status(200).json(users);
     } catch (error) {
-        console.log("error getting data : ", error);
+        console.error("Error retrieving users:", error);
+        return sendErrorResponse(res, 500, "Error retrieving users");
     }
 };
 
-module.exports = {  
+module.exports = {
     update,
     findSingle,
-    findAll
+    findAll,
 };

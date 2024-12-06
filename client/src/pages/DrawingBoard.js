@@ -28,7 +28,7 @@ const DrawingBoard = ({toggleLoginModal}) => {
     // define handler funcs
     const handleClickOnCanvas = (e) => {
       // make srue that the canvas isn't moving and we are in bounds
-      if(Math.abs(e.clientX - downClickPos.pos_x) < 5 && Math.abs(e.clientY === downClickPos.pos_y) < 5)
+      if(Math.abs(e.clientX - downClickPos.pos_x) < 5 && Math.abs(e.clientY - downClickPos.pos_y) < 5)
             if(GetUserInfos().isLogged)
               OnClickInCanvas(e, socket, {x: e.target.id[0], y: e.target.id[1]})
             else
@@ -47,8 +47,8 @@ const DrawingBoard = ({toggleLoginModal}) => {
       pos_x = (Math.floor(pos_x/CELL_SIZE)*CELL_SIZE)
       pos_y = (Math.floor(pos_y/CELL_SIZE)*CELL_SIZE)
 
-      canvasCursor.style.left = `${pos_x}px`;
-      canvasCursor.style.top = `${pos_y}px`;
+      canvasCursor.style.left = `${pos_x}px`
+      canvasCursor.style.top = `${pos_y}px`
     }
 
     // add listeners
@@ -83,12 +83,10 @@ const DrawingBoard = ({toggleLoginModal}) => {
           )
         }
         newCanvasMatrix.push(row);
-      
       }
       setCanvasMatrix(newCanvasMatrix)
 
       setLoaded(true)
-      // drawingBoard.style.visibility = 'visible'
 
       // once canvas init
       axiosInstance.get('/cells') // fetch all cells

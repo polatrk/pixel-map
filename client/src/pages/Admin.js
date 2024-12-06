@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import axiosInstance from '../axiosInstance'
 import '../css/AdminPanel.css'
+import notify from '../utils/Notification'
 
 const Admin = () => {
     const [size, setSize] = useState()
@@ -31,7 +32,7 @@ const Admin = () => {
             value: size
         })
         .then(response => {
-            alert("Size saved successfully !")
+            notify("success", "Size saved successfully !")
         })
         .catch(error => {
             console.error("Error:", error);
@@ -43,7 +44,7 @@ const Admin = () => {
             value: palette
         })
         .then(response => {
-            alert("Palette saved successfully !")
+            notify("success", "Palette saved successfully !")
         })
         .catch(error => {
             console.error("Error:", error);

@@ -1,0 +1,25 @@
+.loader {
+    border: 2px, solid, black;
+    background-color: white;
+
+    height: 40px;
+    aspect-ratio: 1.5;
+    --c1:no-repeat linear-gradient(#bc0036 0 0);
+    --c2:no-repeat linear-gradient(#93b2fc 0 0);
+    --c3:no-repeat linear-gradient(#7eea57 0 0);
+    --c4:no-repeat linear-gradient(#fdd635 0 0);
+    background: var(--c1), var(--c2), var(--c3), var(--c4);
+    background-size: 33.4% 50%;
+    animation: l6 2s infinite linear;
+  }
+  @keyframes l6 {
+    0%    {background-position:0 0,50% 0,0 100%,50% 100%}
+    12.5% {background-position:0 0,100% 0,0 100%,50% 100%}
+    25%   {background-position:0 0,100% 0,0 100%,50% 0}
+    37.5% {background-position:0 0,100% 0,50% 100%,50% 0}
+    50%   {background-position:0 100%,100% 0,50% 100%,50% 0}
+    62.5% {background-position:0 100%,100% 0,50% 100%,0 0}
+    75%   {background-position:0 100%,100% 100%,50% 100%,0 0}
+    87.5% {background-position:0 100%,100% 100%,50% 0,0 0}
+    100%  {background-position:0 100%,50% 100%,50% 0,0 0}
+  }

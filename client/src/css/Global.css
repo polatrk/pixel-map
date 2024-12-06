@@ -1,8 +1,14 @@
+:root {
+    --cursor-size: 16px;
+}
+
 html, body, #root {
     height: 100%;
     overflow: hidden;
     margin: 0;
     padding: 0;
+
+    cursor: none;
 }
 
 .bot {
@@ -29,3 +35,8 @@ html, body, #root {
     position: fixed;
 }
 
+
+/* custom link */
+a:hover {
+    cursor: pointer;
+}

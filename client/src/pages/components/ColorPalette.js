@@ -1,13 +1,12 @@
-import { memo, useEffect, useState } from 'react'
+import { memo, useContext, useEffect, useState } from 'react'
 import '../../css/ColorPalette.css'
 import axiosInstance from '../../axiosInstance'
+import { ColorContext } from '../../utils/context/ColorContext'
 
 const ColorPalette = () => {
     const [palette, setPalette] = useState()
+    const { setSelectedColor } = useContext(ColorContext);
     let currentSelectedColor = null
-
-    // Set default color
-    localStorage.setItem('selectedColor', "#000")
 
     function handleColorClick(e, color) {
       if(currentSelectedColor)
@@ -16,7 +15,7 @@ const ColorPalette = () => {
       currentSelectedColor = e.target
       currentSelectedColor.style.border = '3px, solid, black'
       
-      localStorage.setItem('selectedColor', color)
+      setSelectedColor(color)
     }
 
     useEffect(() => {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import DrawingBoard from './DrawingBoard'
 import ColorPalette from './components/ColorPalette'
 import { ControlZoom, ControlMove, getCursorPosInCanvas } from '../utils/TransformUtils'
@@ -9,6 +9,7 @@ import Signup from './components/modal/Signup'
 import Profile from './components/modal/Profile'
 import CellInfos from './components/CellInfos'
 import { CELL_SIZE } from '../config/constants'
+import CustomCursor from './components/CustomCursor'
 
 const MainBoard = () => {
     // modal related
@@ -84,8 +85,8 @@ const MainBoard = () => {
   return (
     <div className='main-board'>
         {/* modals */}
-        <Login isModalOpen={isLoginModalOpen} toggleLoginModal={toggleLoginModal} />
-        <Signup isModalOpen={isSignupModalOpen} toggleSignupModal={toggleSignupModal}/>
+        <Login isModalOpen={isLoginModalOpen} toggleLoginModal={toggleLoginModal} toggleSignupModal={toggleSignupModal} />
+        <Signup isModalOpen={isSignupModalOpen} toggleSignupModal={toggleSignupModal} toggleLoginModal={toggleLoginModal}/>
         <Profile isModalOpen={isProfileModalOpen} toggleProfileModal={toggleProfileModal}/>
 
         <Header className='header' toggleLoginModal={toggleLoginModal} toggleSignupModal={toggleSignupModal} toggleProfileModal={toggleProfileModal} />
@@ -95,8 +96,9 @@ const MainBoard = () => {
             </div>
         </div>
 
-        <ColorPalette className="color-palette"/>
+        <ColorPalette className="color-palette" />
         <CellInfos cursorPos={cursorPos} className="cell-infos"/>
+        <CustomCursor />
     </div>
   )
 }

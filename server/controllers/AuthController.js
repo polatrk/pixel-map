@@ -2,215 +2,186 @@ const Users = require('../models/Users');
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const nodemailer = require('nodemailer')
-const asynchHandler = require('express-async-handler')
 
-const login = async (req, res) => {
-    const cookies = req.cookies
-    if(cookies?.jwt)
-        return res.sendStatus(409).send({message: "a session is already active"})
-
-    try {
-        const { _email, _password } = req.body
-        if(_email != null && _password != null) {
-            const user = await Users.findOne({
-                where: {
-                    email: _email
-                }
-            })
-        if(user != null) {
-            bcrypt.compare(_password, user.password, (err, result) => {
-                if(result) {
-                    if(user.status === 'INACTIVE')
-                        return res.status(401).send({message: "Please verify your email."})
-
-                    const accessToken = jwt.sign(
-                        {
-                            id: user.id,
-                            email: user.email,
-                            username: user.username,
-                            role: user.role
-                        },
-                        process.env.ACCESS_TOKEN_SECRET,
-                        { expiresIn: '15m' }
-                    )
-
-                    const refreshToken = jwt.sign(
-                        { email: user.email },
-                        process.env.REFRESH_TOKEN_SECRET,
-                        { expiresIn: '8h' }
-                    )
-
-                    res.cookie('jwt', refreshToken, {
-                        httpOnly: true,
-                        secure: process.env.NODE_ENV === 'production',
-                        sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
-                        maxAge: 8 * 60 * 60 * 1000
-                    })
-
-                    res.json({accessToken})
-                } else {
-                    res.status(401).send({message: "Email ou password incorrect"})
-                }
-            })
-        } else {
-            res.status(401).send({message: "Email or password incorrect"});
-        }
-        }
-        else
-            res.status(401).send({message: "All fields are required"});
-    } catch (error) {
-        res.status(400).send({message: error})
-    }
-};
-
-const refresh = (req, res) => {
-    const cookies = req.cookies
-    if(!cookies?.jwt)
-        return res.status(401).json({message: 'Unothaurized'})
-
-    const refreshToken = cookies.jwt
-
-    jwt.verify(
-        refreshToken,
-        process.env.REFRESH_TOKEN_SECRET,
-        asynchHandler(async (err, decoded) => {
-            if (err) return res.status(403).json({ message: 'Forbidden' })
-
-            const foundUser = await Users.findOne({ username: decoded.username })
-
-            if (!foundUser) return res.status(400).json({ message: 'Unauthorized' })
-
-                const accessToken = jwt.sign(
-                    {
-                        id: foundUser.id,
-                        email: foundUser.email,
-                        username: foundUser.username,
-                        role: foundUser.role
-                    },
-                    process.env.ACCESS_TOKEN_SECRET,
-                    { expiresIn: '15m' }
-                )
-
-            res.json({ accessToken })
-        })
-    )
-}
-
-const logout = (req, res) => {
-    const cookies = req.cookies
-    if(!cookies?.jwt)
-        return res.sendStatus(204)
-
-    res.clearCookie('jwt', {
+const setCookie = (res, name, value, options = {}) => {
+    const defaultOptions = {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
-    })
+    };
+    res.cookie(name, value, { ...defaultOptions, ...options });
+};
 
-    res.json({message: 'Cookie cleared'})
-}
+const clearCookie = (res, name) => {
+    res.clearCookie(name, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+    });
+};
+
+const sendErrorResponse = (res, statusCode, message) => {
+    return res.status(statusCode).json({ message });
+};
+
+const login = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        const cookies = req.cookies;
+
+        if (cookies?.accessToken) {
+            return sendErrorResponse(res, 409, "A session is already active.");
+        }
+
+        if (!email || !password) {
+            return sendErrorResponse(res, 400, "All fields are required.");
+        }
+
+        const user = await Users.findOne({ where: { email } });
+        if (!user) {
+            return sendErrorResponse(res, 401, "Email or password incorrect.");
+        }
+
+        if (user.status === "INACTIVE") {
+            return sendErrorResponse(res, 401, "Please verify your email.");
+        }
+
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if (!isPasswordValid) {
+            return sendErrorResponse(res, 401, "Email or password incorrect.");
+        }
+
+        const accessToken = jwt.sign(
+            { id: user.id, email: user.email, username: user.username, role: user.role },
+            process.env.ACCESS_TOKEN_SECRET,
+            { expiresIn: "10s" }
+        );
+
+        const refreshToken = jwt.sign(
+            { email: user.email },
+            process.env.REFRESH_TOKEN_SECRET,
+            { expiresIn: "8h" }
+        );
+
+        setCookie(res, "refreshToken", refreshToken, { maxAge: 8 * 60 * 60 * 1000 });
+        return res.json({ accessToken });
+    } catch (error) {
+        console.error(error);
+        return sendErrorResponse(res, 500, "Internal Server Error.");
+    }
+};
+
+const logout = (req, res) => {
+    const cookies = req.cookies;
+
+    if (!cookies?.accessToken) {
+        return res.status(204).send({ message: "No active session." });
+    }
+
+    clearCookie(res, "accessToken");
+    return res.status(200).json({ message: "Cookie cleared." });
+};
+
+const refresh = async (req, res) => {
+    try {
+        const cookies = req.cookies;
+
+        if (!cookies?.refreshToken) {
+            return sendErrorResponse(res, 401, "Unauthorized.");
+        }
+
+        const refreshToken = cookies.refreshToken;
+        const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+
+        const user = await Users.findOne({ where: { email: decoded.email } });
+        if (!user) {
+            return sendErrorResponse(res, 403, "Forbidden.");
+        }
+
+        const accessToken = jwt.sign(
+            { id: user.id, email: user.email, username: user.username, role: user.role },
+            process.env.ACCESS_TOKEN_SECRET,
+            { expiresIn: "10s" }
+        );
+
+        return res.json({ accessToken });
+    } catch (error) {
+        console.error(error);
+        return sendErrorResponse(res, 403, "Forbidden.");
+    }
+};
 
 const signup = async (req, res) => {
     try {
-        const { _username, _email, _password } = req.body;
+        const { username, email, password } = req.body;
 
-        if (!_username || !_email || !_password) {
-            return res.status(400).send({ message: "All fields are required." });
+        if (!username || !email || !password) {
+            return sendErrorResponse(res, 400, "All fields are required.");
         }
 
-        // Check if the user already exists
-        const existingUser = await Users.findOne({ where: { email: _email } });
+        const existingUser = await Users.findOne({ where: { email } });
         if (existingUser) {
-            return res.status(400).send({ message: "Email is already associated with an account." });
+            return sendErrorResponse(res, 400, "Email is already associated with an account.");
         }
 
-        // Hash the password
-        const hashedPassword = await bcrypt.hash(_password, 10);
-
-        // Create the user
+        const hashedPassword = await bcrypt.hash(password, 10);
         const createdUser = await Users.create({
-            username: _username,
-            email: _email,
+            username,
+            email,
             password: hashedPassword,
             role: "USER",
-            status: "INACTIVE"
+            status: "INACTIVE",
         });
 
-        // Generate a verification token
         const token = jwt.sign(
             { id: createdUser.id },
             process.env.VERIFICATION_EMAIL_TOKEN_SECRET
         );
 
-        // Configure the mail transport
+        const url = process.env.NODE_ENV === "production" ? process.env.REACT_APP_URL : process.env.REACT_APP_URL_DEV;
         const transporter = nodemailer.createTransport({
-            service: 'gmail',
-            port: 465,
-            host: 'smtp.gmail.com',
-            secure: true,
-            auth: {
-                user: process.env.VERIFICATION_EMAIL,
-                pass: process.env.VERIFICATION_EMAIL_PASSWORD
-            }
+            service: "gmail",
+            auth: { user: process.env.VERIFICATION_EMAIL, pass: process.env.VERIFICATION_EMAIL_PASSWORD },
         });
 
-        // Create the email configuration
-        const url = process.env.NODE_ENV === 'production' ? process.env.REACT_APP_URL : process.env.REACT_APP_URL_DEV
-        const mailConfiguration = {
+        await transporter.sendMail({
             from: process.env.VERIFICATION_EMAIL,
             to: createdUser.email,
-            subject: 'Pixel-map Email Verification',
-            text: `${url}/verify/?token=${token}`
-        };
+            subject: "Verify your email",
+            text: `${url}/verify/?token=${token}`,
+        });
 
-        // Send the verification email
-        await transporter.sendMail(mailConfiguration);
-
-        // Respond to the client
-        return res.status(200).send({ message: "Please click on the link we sent to your email." });
+        return res.status(200).json({ message: "Verification email sent. Please check your mailbox." });
     } catch (error) {
         console.error(error);
-        return res.status(400).send({ message: error.message });
+        return sendErrorResponse(res, 500, "Internal Server Error.");
     }
 };
 
 const verifyEmail = async (req, res) => {
     try {
         const { token } = req.body;
+
         if (!token) {
-            return res.status(498).json({ message: "Invalid token" });
+            return sendErrorResponse(res, 400, "Invalid token.");
         }
 
-        jwt.verify(
-            token,
-            process.env.VERIFICATION_EMAIL_TOKEN_SECRET,
-            async (err, decoded) => {
-                if (err) {
-                    return res.status(403).json({ message: "Invalid token" });
-                }
+        const decoded = jwt.verify(token, process.env.VERIFICATION_EMAIL_TOKEN_SECRET);
+        const user = await Users.findOne({ where: { id: decoded.id } });
 
-                const foundUser = await Users.findOne({
-                    where: {
-                        id: decoded.id
-                    }
-                });
+        if (!user) {
+            return sendErrorResponse(res, 404, "User not found.");
+        }
 
-                if (!foundUser) {
-                    return res.status(404).json({ message: "User not found" });
-                }
+        user.status = "ACTIVE";
+        await user.save();
 
-                foundUser.status = 'ACTIVE';
-                await foundUser.save();
-
-                return res.status(200).json({ message: "Email verified successfully" });
-            }
-        );
+        return res.status(200).json({ message: "Email verified successfully." });
     } catch (error) {
-        return res.status(500).json({ message: "Error:", error: error.message });
+        console.error(error);
+        return sendErrorResponse(res, 500, "Internal Server Error.");
     }
 };
-
-
 
 module.exports = {
     login,

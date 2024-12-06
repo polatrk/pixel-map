@@ -23,8 +23,8 @@ export const login = async (e) => {
     const password = document.getElementById('passwordInput').value;
 
     const data = {
-        _email: email,
-        _password: password
+        email: email,
+        password: password
     };
 
     try {
@@ -34,7 +34,7 @@ export const login = async (e) => {
         return null;
     } catch (err) {
         if (err.response?.data?.message) {
-            return err.response.data.message;
+            return {status: err, message: err.response.data.message};
         }
         return "An unknown error occurred";
     }
@@ -49,14 +49,14 @@ export const signup = async (e) => {
     const password = document.getElementById('passwordInput').value
 
     const data = {
-        _username: username,
-        _email: email,
-        _password: password
+        username: username,
+        email: email,
+        password: password
     }
     
     try {
-        const response = await axiosInstance.post('/auth/signup', data);
-        return response.data?.message || "No response";
+        await axiosInstance.post('/auth/signup', data);
+        return null;
     } catch (err) {
         if (err.response?.data?.message) {
             return err.response.data.message;

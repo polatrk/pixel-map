@@ -3,6 +3,7 @@ import "../../../css/Modal.css"
 import { logout } from '../../../utils/AuthUtils'
 import { GetUserInfos } from "../../../utils/UserInfos"
 import Modal from './Modal'
+import notify from "../../../utils/Notification"
 
 const Profile = ({ isModalOpen, toggleProfileModal }) => {
     const userInfos = GetUserInfos()
@@ -22,11 +23,11 @@ const Profile = ({ isModalOpen, toggleProfileModal }) => {
 
       return axiosInstance.post(`/users/${userInfos.id}`, data)
       .then((response) => {
-          alert("Profile saved successfully\nPlease login again")
+          notify("success", "Profile saved successfully\nPlease login again")
           logout()
       })
       .catch((err) => {
-          alert("error while saving profile:", err.message)
+          notify("error", "error while saving profile:", err.message)
       });
     }
 
@@ -48,7 +49,7 @@ const Profile = ({ isModalOpen, toggleProfileModal }) => {
           id='passwordInput' placeholder='Your password' />
         </div>
       </form>
-      <button id='btn-submit' className='btn btn-primary' onClick={trySave}>Save</button>
+      <button className='btn btn-primary' onClick={trySave}>Save</button>
     </Modal>
   )
 }

@@ -3,7 +3,7 @@ import { GetUserInfos } from "../../utils/UserInfos";
 
 const ProtectedRoute = ({children, requiredRole}) => {
     const { role } = GetUserInfos()
-    if(role !== requiredRole && role !== 'admin')
+    if(role !== requiredRole && role !== 'ADMIN')
         return <Navigate to='/forbidden'></Navigate>
 
     return children

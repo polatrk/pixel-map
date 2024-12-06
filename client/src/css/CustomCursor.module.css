@@ -1,0 +1,24 @@
+.custom-cursor_container {
+    position: absolute;
+}
+
+.custom-cursor_color {
+    position: absolute;
+    pointer-events: none;
+    width: var(--cursor-size);
+    height: var(--cursor-size);
+    background-color: red;
+    -webkit-mask-image: url('../images/customcursor_mask.png');
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-size: contain;
+    mask-image: url('../images/customcursor_mask.png');
+    mask-repeat: no-repeat;
+    mask-size: contain;
+}
+
+.custom-cursor_outline {
+    position: absolute;
+    pointer-events: none;
+    width: var(--cursor-size);
+    height: var(--cursor-size);
+}

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { GetUserInfos } from '../../utils/UserInfos'
 import '../../css/Header.css'
 import { logout } from '../../utils/AuthUtils'
+import notify from '../../utils/Notification'
 
 const Header = ({toggleLoginModal, toggleSignupModal, toggleProfileModal}) => {
     const [isLogged, setIsLogged] = useState()
@@ -22,7 +23,7 @@ const Header = ({toggleLoginModal, toggleSignupModal, toggleProfileModal}) => {
       const logoutError = await logout(e)
   
       if(logoutError) {
-        alert(logoutError)
+        notify("error", logoutError)
         return
       }
     }
