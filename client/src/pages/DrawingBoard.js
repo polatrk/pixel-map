@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import {  DrawMultipleCells, DrawSingleCell } from '../utils/DrawingUtils'
 import axiosInstance from '../axiosInstance'
 import { getCursorPosInCanvas } from '../utils/TransformUtils'
@@ -7,11 +7,20 @@ import { CELL_SIZE, CELL_PER_CANVAS } from "../config/constants"
 import '../css/DrawingBoard.css'
 import { GetUserInfos } from '../utils/UserInfos'
 import { OnClickInCanvas } from '../utils/DrawingBoardControls'
+import { ColorContext } from "../utils/context/ColorContext";
 
 const DrawingBoard = ({toggleLoginModal}) => {
   const [isLoaded, setLoaded] = useState(false)
   const [canvasMatrix, setCanvasMatrix] = useState()
   const [canvasSize, setCanvasSize] = useState({x: 0, y: 0})
+  const { selectedColor } = useContext(ColorContext);
+
+
+  // avoid rerender when selected color changes
+  const selectedColorRef = React.useRef(selectedColor);
+  useEffect(() => {
+    selectedColorRef.current = selectedColor;
+  }, [selectedColor]);
 
   useEffect(() => {
     // create ws connection
@@ -27,10 +36,11 @@ const DrawingBoard = ({toggleLoginModal}) => {
 
     // define handler funcs
     const handleClickOnCanvas = (e) => {
+      console.log(selectedColor)
       // make srue that the canvas isn't moving and we are in bounds
       if(Math.abs(e.clientX - downClickPos.pos_x) < 5 && Math.abs(e.clientY - downClickPos.pos_y) < 5)
             if(GetUserInfos().isLogged)
-              OnClickInCanvas(e, socket, {x: e.target.id[0], y: e.target.id[1]})
+              OnClickInCanvas(e, socket, selectedColorRef.current)
             else
               toggleLoginModal();
     };

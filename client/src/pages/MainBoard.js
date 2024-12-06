@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import DrawingBoard from './DrawingBoard'
 import ColorPalette from './components/ColorPalette'
 import { ControlZoom, ControlMove, getCursorPosInCanvas } from '../utils/TransformUtils'

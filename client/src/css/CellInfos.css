@@ -11,8 +11,3 @@
     border-radius: 1vw;
     border: 2px, solid, black;
 }
-
-.cellinfos-container * {
-    padding-left: 2vh;
-    padding-right: 2vh;
-}

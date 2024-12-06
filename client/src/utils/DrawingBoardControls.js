@@ -3,12 +3,9 @@ import axiosInstance from "../axiosInstance"
 import { CELL_SIZE } from "../config/constants"
 import { GetUserInfos } from "./UserInfos"
 import { DrawSingleCell } from "./DrawingUtils"
-import { useContext } from "react"
-import { ColorContext } from "./context/ColorContext"
 
-export function OnClickInCanvas(event, socket, canvas_pos) {
+export function OnClickInCanvas(event, socket, selectedColor) {
     let cursorPos = getCursorPosInCanvas({pos_x: event.clientX, pos_y: event.clientY})
-    const { selectedColor } = useContext(ColorContext);
     
     // round to the cell size
     cursorPos.pos_x = Math.floor(cursorPos.pos_x/CELL_SIZE)

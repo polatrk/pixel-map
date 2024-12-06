@@ -7,7 +7,6 @@ const CustomCursor = () => {
   const { selectedColor } = useContext(ColorContext);
 
   useEffect(() => {
-    console.log(selectedColor)
     const customCursor = document.querySelector("#custom-cursor");
 
     const handleMouseMove = (e) => {
