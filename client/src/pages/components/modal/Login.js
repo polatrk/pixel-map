@@ -18,10 +18,11 @@ const Login = ({ isModalOpen, toggleLoginModal, toggleSignupModal }) => {
 
     setIsLoading(false)
 
-    if(loginError) {
-      notify("error", loginError)
-      return
-    }
+    if(loginError)
+      if(loginError.status !== 200) {
+        notify("error", loginError.message)
+        return
+      }
 
       toggleLoginModal()
   }

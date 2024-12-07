@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom"
 import "../../../css/Modal.css"
+import "../../../css/Global.css"
 import { signup } from '../../../utils/AuthUtils'
 import notify from "../../../utils/Notification"
 import Modal from './Modal'
@@ -17,8 +18,8 @@ const Signup = ({ isModalOpen, toggleSignupModal, toggleLoginModal}) => {
   
       setIsLoading(false)
 
-      if(signupError) {
-        notify('error', signupError)
+      if(signupError.message) {
+        notify('error', signupError.message)
         return
       }
   

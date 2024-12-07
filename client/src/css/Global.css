@@ -7,8 +7,6 @@ html, body, #root {
     overflow: hidden;
     margin: 0;
     padding: 0;
-
-    cursor: none;
 }
 
 .bot {
@@ -33,10 +31,4 @@ html, body, #root {
     right: 2vh;
     margin: 0;
     position: fixed;
-}
-
-
-/* custom link */
-a:hover {
-    cursor: pointer;
 }

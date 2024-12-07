@@ -4,3 +4,7 @@
 
     z-index: 1;
 }
+
+.header-container button {
+    margin: 0.25vw;
+}

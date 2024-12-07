@@ -1,8 +1,6 @@
 import axiosInstance from "../axiosInstance";
 
-export const logout = async (e) => {
-    e.preventDefault()
-    
+export const logout = async () => {    
     try {
         await axiosInstance.post('/auth/logout');
         localStorage.removeItem('accessToken')
@@ -16,9 +14,7 @@ export const logout = async (e) => {
     }
 }
 
-export const login = async (e) => {
-    e.preventDefault();
-
+export const login = async () => {
     const email = document.getElementById('emailInput').value;
     const password = document.getElementById('passwordInput').value;
 
@@ -41,9 +37,7 @@ export const login = async (e) => {
 };
 
 
-export const signup = async (e) => {
-    e.preventDefault()
-
+export const signup = async () => {
     const username = document.getElementById('usernameInput').value
     const email = document.getElementById('emailInput').value
     const password = document.getElementById('passwordInput').value

@@ -5,16 +5,17 @@ export function getCursorPosInCanvas(clickPos) {
     const moveDiv = document.getElementById("move-controller")
     const moveDivBounds = moveDiv.getBoundingClientRect()
 
-    // Get float value from scale(9.9999)
+    // get float value from scale(x.xxx)
     const regex = /scale\(([^)]+)\)/i
     const transform = zoomDiv.style.transform
+    const borderSize = getComputedStyle(moveDiv).getPropertyValue("border-top-width").replace('px','') // to exclude the borders
     let currentScale = 1
     if(transform !== '')
         currentScale = parseFloat(regex.exec(transform)[1])
     const rel_x = (clickPos.pos_x - moveDivBounds.left)/currentScale
     const rel_y = (clickPos.pos_y - moveDivBounds.top)/currentScale
 
-    return {pos_x: Math.floor(rel_x), pos_y: Math.floor(rel_y)}
+    return {pos_x: Math.floor(rel_x-borderSize), pos_y: Math.floor(rel_y-borderSize)}
 }
 
 export function ControlZoom(event, zoomDiv) {
@@ -38,6 +39,7 @@ export function ControlMove(event, moveDiv, lastMousePosInCanvas) {
     // Get float value from scale(9.9999)
     const regex = /scale\(([^)]+)\)/i
     const transform = zoomDiv.style.transform
+    const borderSize = getComputedStyle(moveDiv).getPropertyValue("border-top-width").replace('px','') // to exclude the borders
     let currentScale = 1
     if(transform !== '')
         currentScale = parseFloat(regex.exec(transform)[1])
@@ -45,6 +47,6 @@ export function ControlMove(event, moveDiv, lastMousePosInCanvas) {
     const rel_x = (event.clientX - zooDivBounds.left)/currentScale
     const rel_y = (event.clientY - zooDivBounds.top)/currentScale
 
-    moveDiv.style.left = `${rel_x-lastMousePosInCanvas.pos_x}px`
-    moveDiv.style.top = `${rel_y-lastMousePosInCanvas.pos_y}px`
+    moveDiv.style.left = `${(rel_x - borderSize)-lastMousePosInCanvas.pos_x}px`
+    moveDiv.style.top = `${(rel_y - borderSize)-lastMousePosInCanvas.pos_y}px`
 }

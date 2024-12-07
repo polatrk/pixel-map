@@ -12,7 +12,7 @@ const Profile = ({ isModalOpen, toggleProfileModal }) => {
       e.preventDefault()
 
       const username = document.getElementById('usernameInput').value
-      const email = document.getElementById('emailInput').value
+      //const email = document.getElementById('emailInput').value
       const password = document.getElementById('passwordInput').value
       
 
@@ -23,11 +23,12 @@ const Profile = ({ isModalOpen, toggleProfileModal }) => {
 
       return axiosInstance.post(`/users/${userInfos.id}`, data)
       .then((response) => {
-          notify("success", "Profile saved successfully\nPlease login again")
-          logout()
+        toggleProfileModal()
+        notify("success", "Profile saved successfully\nPlease login again")
+        logout()
       })
       .catch((err) => {
-          notify("error", "error while saving profile:", err.message)
+        notify("error", "error while saving profile:", err.message)
       });
     }
 
@@ -48,8 +49,10 @@ const Profile = ({ isModalOpen, toggleProfileModal }) => {
           <input required autoComplete='new-password' type='password' className='form-control' 
           id='passwordInput' placeholder='Your password' />
         </div>
+        <div className="btn-submit_container" style={{marginBottom: '1vh'}}>
+          <button type='submit' className='btn btn-primary' onClick={trySave}>Save</button>
+        </div>
       </form>
-      <button className='btn btn-primary' onClick={trySave}>Save</button>
     </Modal>
   )
 }

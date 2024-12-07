@@ -1,19 +1,19 @@
-import { memo, useContext, useEffect, useState } from 'react'
+import { memo, useContext, useEffect, useRef, useState } from 'react'
 import '../../css/ColorPalette.css'
 import axiosInstance from '../../axiosInstance'
 import { ColorContext } from '../../utils/context/ColorContext'
 
 const ColorPalette = () => {
     const [palette, setPalette] = useState()
-    const { setSelectedColor } = useContext(ColorContext);
-    let currentSelectedColor = null
+    const { setSelectedColor } = useContext(ColorContext)
+    const currentSelectedColor = useRef(null)
 
     function handleColorClick(e, color) {
-      if(currentSelectedColor)
-        currentSelectedColor.style.border = ''
+      if(currentSelectedColor.current)
+        currentSelectedColor.current.style.border = ''
 
-      currentSelectedColor = e.target
-      currentSelectedColor.style.border = '3px, solid, black'
+      currentSelectedColor.current = e.target
+      currentSelectedColor.current.style.border = '3px, solid, black'
       
       setSelectedColor(color)
     }

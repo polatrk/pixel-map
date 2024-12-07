@@ -3,7 +3,7 @@ import {  DrawMultipleCells, DrawSingleCell } from '../utils/DrawingUtils'
 import axiosInstance from '../axiosInstance'
 import { getCursorPosInCanvas } from '../utils/TransformUtils'
 import canvasCursorImg from '../images/canvasCursor.png'
-import { CELL_SIZE, CELL_PER_CANVAS } from "../config/constants"
+import { CANVAS_SIZE, CELL_SIZE } from "../config/constants"
 import '../css/DrawingBoard.css'
 import { GetUserInfos } from '../utils/UserInfos'
 import { OnClickInCanvas } from '../utils/DrawingBoardControls'
@@ -12,7 +12,7 @@ import { ColorContext } from "../utils/context/ColorContext";
 const DrawingBoard = ({toggleLoginModal}) => {
   const [isLoaded, setLoaded] = useState(false)
   const [canvasMatrix, setCanvasMatrix] = useState()
-  const [canvasSize, setCanvasSize] = useState({x: 0, y: 0})
+  const [drawingBoardSize, setDrawingBoardSize] = useState({x: 0, y: 0})
   const { selectedColor } = useContext(ColorContext);
 
 
@@ -36,7 +36,6 @@ const DrawingBoard = ({toggleLoginModal}) => {
 
     // define handler funcs
     const handleClickOnCanvas = (e) => {
-      console.log(selectedColor)
       // make srue that the canvas isn't moving and we are in bounds
       if(Math.abs(e.clientX - downClickPos.pos_x) < 5 && Math.abs(e.clientY - downClickPos.pos_y) < 5)
             if(GetUserInfos().isLogged)
@@ -76,7 +75,7 @@ const DrawingBoard = ({toggleLoginModal}) => {
     // fetch data
     axiosInstance.get('/properties/size') // Fetch size
     .then(response => {
-      setCanvasSize({x: response.data.x, y: response.data.y})
+      setDrawingBoardSize({x: response.data.x, y: response.data.y})
 
       let newCanvasMatrix = []
       for (let indexY = 0; indexY < response.data.y; indexY++) {
@@ -84,7 +83,7 @@ const DrawingBoard = ({toggleLoginModal}) => {
         for (let indexX = 0; indexX < response.data.x; indexX++) {
           row.push(
             <canvas 
-            width={CELL_PER_CANVAS*CELL_SIZE} height={CELL_PER_CANVAS*CELL_SIZE} 
+            width={CANVAS_SIZE} height={CANVAS_SIZE} 
             style={{
               flex: `1 1 ${100 / response.data.x}%`, // 100/rowSize
             }} 
@@ -122,7 +121,7 @@ const DrawingBoard = ({toggleLoginModal}) => {
     }, []);  // empty dependency array to run this effect only once on component mount
 
   return (
-    <div style={{width: `${CELL_PER_CANVAS*CELL_SIZE*canvasSize.x}px`}} id='drawing-board'>
+    <div style={{width: `${CANVAS_SIZE*drawingBoardSize.x}px`}} id='drawing-board'>
         {!isLoaded ? (
           <h1>Loading...</h1>
         ) : (

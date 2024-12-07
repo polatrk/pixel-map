@@ -17,7 +17,7 @@ export function OnClickInCanvas(event, socket, selectedColor) {
         color: selectedColor,
         modified_by: GetUserInfos().id
     };
-    
+
     DrawSingleCell(cellData)
 
     axiosInstance.post('/cells', cellData, {
