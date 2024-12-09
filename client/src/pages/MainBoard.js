@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import DrawingBoard from './DrawingBoard'
 import ColorPalette from './components/ColorPalette'
-import { ControlZoom, getCursorPosInCanvas, ControlMoveTwoFinger, ControlMoveWithMouse } from '../utils/TransformUtils'
+import { ControlZoom, getCursorPosInCanvas, ControlMoveWithTouch, ControlMoveWithMouse } from '../utils/TransformUtils'
 import '../css/MainBoard.css'
 import Header from './components/Header'
 import Login from './components/modal/Login'
@@ -10,7 +10,7 @@ import Profile from './components/modal/Profile'
 import CellInfos from './components/CellInfos'
 import { CELL_SIZE } from '../config/constants'
 import CustomCursor from './components/CustomCursor'
-import { usePinch, useWheel } from '@use-gesture/react';
+import { useDrag, usePinch, useWheel } from '@use-gesture/react';
 
 const MainBoard = () => {
     // dom elements
@@ -51,14 +51,11 @@ const MainBoard = () => {
         }
     );
 
-    useWheel(
-        ({ delta: [dx, dy], event }) => {
-            if(Math.abs(dy) === 100)                            // case where user is using the mouse wheel
-                ControlZoom(((dy/100)*0.075) * -1, zoomDivRef.current, false)
-            else {                                              // case where user is using the trackpad
-                event.preventDefault();
-                ControlMoveTwoFinger(moveDivRef.current, {x: dx, y: dy})
-            }
+    useDrag(
+        (state) => {
+            const { offset: [x, y] } = state;
+            console.log(x, '/', y)
+            ControlMoveWithTouch(moveDivRef.current, { x, y });
         },
         {
             target: moveDivRef,
@@ -66,6 +63,23 @@ const MainBoard = () => {
             preventDefault: true,
         }
     );
+
+    // useWheel(
+    //     ({ delta: [dx, dy], event }) => {
+    //         console.log(dy)
+    //         if(Math.abs(dy) === 100)                            // case where user is using the mouse wheel
+    //             ControlZoom(((dy/100)*0.075) * -1, zoomDivRef.current, false)
+    //         else {                                              // case where user is using the trackpad
+    //             event.preventDefault();
+    //             ControlMoveWithTouch(moveDivRef.current, {x: dx, y: dy})
+    //         }
+    //     },
+    //     {
+    //         target: moveDivRef,
+    //         eventOptions: { passive: false },
+    //         preventDefault: true,
+    //     }
+    // );
 
     useEffect(() => {
         const canvas = moveDivRef.current.querySelector("#drawing-board")

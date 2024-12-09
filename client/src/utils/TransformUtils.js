@@ -56,7 +56,7 @@ export function ControlMoveWithMouse(event, moveDiv, lastMousePosInCanvas) {
     moveDiv.style.top = `${(rel_y - borderSize) - lastMousePosInCanvas.pos_y}px`
 }
 
-export function ControlMoveTwoFinger(moveDiv, moveOffset) {
+export function ControlMoveWithTouch(moveDiv, moveOffset) {
     const zoomDiv = moveDiv.closest("#zoom-controller")
 
     const regex = /scale\(([^)]+)\)/i
