@@ -53,7 +53,6 @@ const MainBoard = () => {
 
     useWheel(
         ({ delta: [dx, dy], event }) => {
-            console.log(dy)
             if(Math.abs(dy) === 100)                            // case where user is using the mouse wheel
                 ControlZoom(((dy/100)*0.075) * -1, zoomDivRef.current, false)
             else {                                              // case where user is using the trackpad
@@ -76,17 +75,25 @@ const MainBoard = () => {
         let lastHoveredCellPos = {pos_x: 0, pos_y: 0}
 
         const handleMouseMove = (e) => {
+            let eventOrigin = null
+            if(e.type.includes('mouse')) 
+                eventOrigin = e
+            else if(e.type.includes('touch')) {
+                eventOrigin = e.touches[0];
+            }
+
             if(bIsMouseDown)
-                ControlMoveWithMouse(e, moveDivRef.current, clickPosInCanvas)
+                ControlMoveWithMouse(eventOrigin, moveDivRef.current, clickPosInCanvas)
 
             // for cell infos
-            const cursorPos = getCursorPosInCanvas({pos_x: e.clientX, pos_y: e.clientY}, canvas)
+            const cursorPos = getCursorPosInCanvas({pos_x: eventOrigin.clientX, pos_y: eventOrigin.clientY}, canvas)
+
             const cellPos = {
                 pos_x: Math.floor(cursorPos.pos_x / CELL_SIZE),
                 pos_y: Math.floor(cursorPos.pos_y / CELL_SIZE),
               }
             if(cellPos.pos_x !== lastHoveredCellPos.pos_x || cellPos.pos_y !== lastHoveredCellPos.pos_y) {
-                setCursorPos(getCursorPosInCanvas({pos_x: e.clientX, pos_y: e.clientY}, canvas))
+                setCursorPos(getCursorPosInCanvas({pos_x: eventOrigin.clientX, pos_y: eventOrigin.clientY}, canvas))
                 lastHoveredCellPos = cellPos
             }
         }
@@ -103,10 +110,12 @@ const MainBoard = () => {
 
             // for mobile
             moveDivRef.current.addEventListener("touchmove", handleMouseMove)
-            moveDivRef.current.addEventListener("touchup", () => {bIsMouseDown = false})
-            moveDivRef.current.addEventListener("touchdown", (e) => {
+            moveDivRef.current.addEventListener("touchend", () => {bIsMouseDown = false})
+            moveDivRef.current.addEventListener("touchstart", (e) => {
                 bIsMouseDown = true
-                clickPosInCanvas = getCursorPosInCanvas({pos_x: e.clientX, pos_y: e.clientY})
+                const touch = e.touches[0];
+                console.log(touch.clientX)
+                clickPosInCanvas = getCursorPosInCanvas({pos_x: touch.clientX, pos_y: touch.clientY})
             })
         }
 
