@@ -10,7 +10,7 @@ import Profile from './components/modal/Profile'
 import CellInfos from './components/CellInfos'
 import { CELL_SIZE } from '../config/constants'
 import CustomCursor from './components/CustomCursor'
-import { useDrag, usePinch, useWheel } from '@use-gesture/react';
+import { usePinch, useWheel } from '@use-gesture/react';
 
 const MainBoard = () => {
     // dom elements
@@ -51,11 +51,15 @@ const MainBoard = () => {
         }
     );
 
-    useDrag(
-        (state) => {
-            const { offset: [x, y] } = state;
-            console.log(x, '/', y)
-            ControlMoveWithTouch(moveDivRef.current, { x, y });
+    useWheel(
+        ({ delta: [dx, dy], event }) => {
+            console.log(dy)
+            if(Math.abs(dy) === 100)                            // case where user is using the mouse wheel
+                ControlZoom(((dy/100)*0.075) * -1, zoomDivRef.current, false)
+            else {                                              // case where user is using the trackpad
+                event.preventDefault();
+                ControlMoveWithTouch(moveDivRef.current, {x: dx, y: dy})
+            }
         },
         {
             target: moveDivRef,
@@ -63,23 +67,6 @@ const MainBoard = () => {
             preventDefault: true,
         }
     );
-
-    // useWheel(
-    //     ({ delta: [dx, dy], event }) => {
-    //         console.log(dy)
-    //         if(Math.abs(dy) === 100)                            // case where user is using the mouse wheel
-    //             ControlZoom(((dy/100)*0.075) * -1, zoomDivRef.current, false)
-    //         else {                                              // case where user is using the trackpad
-    //             event.preventDefault();
-    //             ControlMoveWithTouch(moveDivRef.current, {x: dx, y: dy})
-    //         }
-    //     },
-    //     {
-    //         target: moveDivRef,
-    //         eventOptions: { passive: false },
-    //         preventDefault: true,
-    //     }
-    // );
 
     useEffect(() => {
         const canvas = moveDivRef.current.querySelector("#drawing-board")
@@ -106,9 +93,18 @@ const MainBoard = () => {
 
 
         if (moveDivRef.current) {
+            // for computer
             moveDivRef.current.addEventListener("mousemove", handleMouseMove)
             moveDivRef.current.addEventListener("mouseup", () => {bIsMouseDown = false})
             moveDivRef.current.addEventListener("mousedown", (e) => {
+                bIsMouseDown = true
+                clickPosInCanvas = getCursorPosInCanvas({pos_x: e.clientX, pos_y: e.clientY})
+            })
+
+            // for mobile
+            moveDivRef.current.addEventListener("touchmove", handleMouseMove)
+            moveDivRef.current.addEventListener("touchup", () => {bIsMouseDown = false})
+            moveDivRef.current.addEventListener("touchdown", (e) => {
                 bIsMouseDown = true
                 clickPosInCanvas = getCursorPosInCanvas({pos_x: e.clientX, pos_y: e.clientY})
             })
@@ -118,6 +114,7 @@ const MainBoard = () => {
         return () => {
             if (moveDivRef.current) {
                 moveDivRef.current.removeEventListener("mousemove", handleMouseMove)
+                moveDivRef.current.removeEventListener("touchmove", handleMouseMove)
             }
         }
     }, [])
