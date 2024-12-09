@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import DrawingBoard from './DrawingBoard'
 import ColorPalette from './components/ColorPalette'
 import { ControlZoom, ControlMove, getCursorPosInCanvas } from '../utils/TransformUtils'
@@ -10,8 +10,13 @@ import Profile from './components/modal/Profile'
 import CellInfos from './components/CellInfos'
 import { CELL_SIZE } from '../config/constants'
 import CustomCursor from './components/CustomCursor'
+import { usePinch } from '@use-gesture/react';
 
 const MainBoard = () => {
+    // dom elements
+    const zoomDivRef = useRef(null)
+    const moveDivRef = useRef(null)
+
     // modal related
     const [isLoginModalOpen, setLoginModalOpen] = useState(false);
     const [isSignupModalOpen, setSignupModalOpen] = useState(false);
@@ -34,19 +39,28 @@ const MainBoard = () => {
         setProfileModalOpen(!isProfileModalOpen)
     }
 
+    // Use the usePinch hook
+    usePinch(
+        ({ offset: [d] }) => {
+        ControlZoom(d, zoomDivRef.current)
+        },
+        {
+        target: zoomDivRef,
+        eventOptions: { passive: false },
+        preventDefault: true,
+        }
+    );
+
     useEffect(() => {
-        const zoomDiv = document.querySelector("#zoom-controller")
-        const moveDiv = document.querySelector("#move-controller")
-        const canvas = moveDiv.querySelector("#drawing-board")
+        const canvas = moveDivRef.current.querySelector("#drawing-board")
 
         let bIsMouseDown = false
         let clickPosInCanvas = {pos_x: 0, pos_y: 0}
         let lastHoveredCellPos = {pos_x: 0, pos_y: 0}
 
-        const handleZoom = (e) => ControlZoom(e, zoomDiv)
         const handleMouseMove = (e) => {
             if(bIsMouseDown)
-                ControlMove(e, moveDiv, clickPosInCanvas)
+                ControlMove(e, moveDivRef.current, clickPosInCanvas)
 
             // for cell infos
             const cursorPos = getCursorPosInCanvas({pos_x: e.clientX, pos_y: e.clientY}, canvas)
@@ -60,12 +74,11 @@ const MainBoard = () => {
             }
         }
 
-        if (zoomDiv)
-            zoomDiv.addEventListener('wheel', handleZoom);
-        if (moveDiv) {
-            moveDiv.addEventListener("mousemove", handleMouseMove)
-            moveDiv.addEventListener("mouseup", () => {bIsMouseDown = false})
-            moveDiv.addEventListener("mousedown", (e) => {
+
+        if (moveDivRef.current) {
+            moveDivRef.current.addEventListener("mousemove", handleMouseMove)
+            moveDivRef.current.addEventListener("mouseup", () => {bIsMouseDown = false})
+            moveDivRef.current.addEventListener("mousedown", (e) => {
                 bIsMouseDown = true
                 clickPosInCanvas = getCursorPosInCanvas({pos_x: e.clientX, pos_y: e.clientY})
             })
@@ -73,11 +86,8 @@ const MainBoard = () => {
 
         // Cleanup the event listener on unmount
         return () => {
-            if (zoomDiv) {
-                zoomDiv.removeEventListener('wheel', handleZoom);
-            }
-            if (moveDiv) {
-                moveDiv.removeEventListener("mousemove", handleMouseMove)
+            if (moveDivRef.current) {
+                moveDivRef.current.removeEventListener("mousemove", handleMouseMove)
             }
         }
     }, [])
@@ -90,8 +100,8 @@ const MainBoard = () => {
         <Profile isModalOpen={isProfileModalOpen} toggleProfileModal={toggleProfileModal}/>
 
         <Header className='header' toggleLoginModal={toggleLoginModal} toggleSignupModal={toggleSignupModal} toggleProfileModal={toggleProfileModal} />
-        <div id='zoom-controller'>
-            <div id='move-controller'>
+        <div id='zoom-controller' ref={zoomDivRef}>
+            <div id='move-controller' ref={moveDivRef}>
                 <DrawingBoard toggleLoginModal={toggleLoginModal}/>
             </div>
         </div>
