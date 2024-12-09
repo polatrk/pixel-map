@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import DrawingBoard from './DrawingBoard'
 import ColorPalette from './components/ColorPalette'
-import { ControlZoom, ControlMove, getCursorPosInCanvas } from '../utils/TransformUtils'
+import { ControlZoom, getCursorPosInCanvas, ControlMoveTwoFinger, ControlMoveWithMouse } from '../utils/TransformUtils'
 import '../css/MainBoard.css'
 import Header from './components/Header'
 import Login from './components/modal/Login'
@@ -10,7 +10,7 @@ import Profile from './components/modal/Profile'
 import CellInfos from './components/CellInfos'
 import { CELL_SIZE } from '../config/constants'
 import CustomCursor from './components/CustomCursor'
-import { usePinch } from '@use-gesture/react';
+import { usePinch, useWheel } from '@use-gesture/react';
 
 const MainBoard = () => {
     // dom elements
@@ -42,12 +42,28 @@ const MainBoard = () => {
     // Use the usePinch hook
     usePinch(
         ({ offset: [d] }) => {
-        ControlZoom(d, zoomDivRef.current)
+        ControlZoom(d, zoomDivRef.current, true)
         },
         {
         target: zoomDivRef,
         eventOptions: { passive: false },
         preventDefault: true,
+        }
+    );
+
+    useWheel(
+        ({ delta: [dx, dy], event }) => {
+            if(Math.abs(dy) === 100)                            // case where user is using the mouse wheel
+                ControlZoom(((dy/100)*0.075) * -1, zoomDivRef.current, false)
+            else {                                              // case where user is using the trackpad
+                event.preventDefault();
+                ControlMoveTwoFinger(moveDivRef.current, {x: dx, y: dy})
+            }
+        },
+        {
+            target: moveDivRef,
+            eventOptions: { passive: false },
+            preventDefault: true,
         }
     );
 
@@ -60,7 +76,7 @@ const MainBoard = () => {
 
         const handleMouseMove = (e) => {
             if(bIsMouseDown)
-                ControlMove(e, moveDivRef.current, clickPosInCanvas)
+                ControlMoveWithMouse(e, moveDivRef.current, clickPosInCanvas)
 
             // for cell infos
             const cursorPos = getCursorPosInCanvas({pos_x: e.clientX, pos_y: e.clientY}, canvas)
