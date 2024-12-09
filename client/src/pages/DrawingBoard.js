@@ -113,7 +113,7 @@ const DrawingBoard = ({toggleLoginModal}) => {
 
     // claenup
     return () => {
-      socket.close()
+      // socket.close()
       drawingBoard.removeEventListener('mouseup', handleClickOnCanvas);
       drawingBoard.removeEventListener('mousedown', (e) => downClickPos = {pos_x: e.clientX, pos_y: e.clientY});
       drawingBoard.removeEventListener('mousemove', handleMouseMove);

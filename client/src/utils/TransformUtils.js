@@ -65,6 +65,6 @@ export function ControlMoveTwoFinger(moveDiv, moveOffset) {
     if(transform !== '')
         currentScale = parseFloat(regex.exec(transform)[1])
 
-    moveDiv.style.left = `${parseFloat(moveDiv.style.left) - (moveOffset.x / currentScale)}px`
-    moveDiv.style.top = `${parseFloat(moveDiv.style.top) - (moveOffset.y / currentScale)}px`
+    moveDiv.style.left = `${(parseFloat(moveDiv.style.left) ? parseFloat(moveDiv.style.left) : 0) - (moveOffset.x / currentScale)}px`
+    moveDiv.style.top = `${(parseFloat(moveDiv.style.top) ? parseFloat(moveDiv.style.top) : 0) - (moveOffset.y / currentScale)}px`
 }
