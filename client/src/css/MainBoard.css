@@ -28,3 +28,9 @@
     align-items: center;
     z-index: 0;
 }
+
+@media (max-width: 768px) {
+    .main-board {
+        cursor: pointer;
+    }
+  }

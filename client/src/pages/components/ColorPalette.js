@@ -36,6 +36,7 @@ const ColorPalette = () => {
           className="color-choice" 
           key={color} style={{backgroundColor: color, backgroundImage: 'none'}} 
           onClick={(e) => handleColorClick(e, color)}
+          onTouch={(e) => handleColorClick(e, color)}
           />
       })
     ) : (

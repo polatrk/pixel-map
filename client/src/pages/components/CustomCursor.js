@@ -2,6 +2,7 @@ import { useContext, useEffect } from "react";
 import styles from "../../css/CustomCursor.module.css";
 import customCursorOutlineImg from "../../images/customcursor_outline.png";
 import { ColorContext } from "../../utils/context/ColorContext";
+import { isMobile } from 'react-device-detect';
 
 const CustomCursor = () => {
   const { selectedColor } = useContext(ColorContext);
@@ -24,10 +25,14 @@ const CustomCursor = () => {
   }, [])
 
   return (
-    <div id='custom-cursor' className={styles["custom-cursor_container"]}>
-      <div className={styles["custom-cursor_color"]} style={{backgroundColor: selectedColor}} />
-      <img src={customCursorOutlineImg} alt="customcursor_outline.png" className={styles["custom-cursor_outline"]} />
-    </div>
+    <>
+      {isMobile && (
+      <div id='custom-cursor' className={styles["custom-cursor_container"]}>
+        <div className={styles["custom-cursor_color"]} style={{backgroundColor: selectedColor}} />
+        <img src={customCursorOutlineImg} alt="customcursor_outline.png" className={styles["custom-cursor_outline"]} />
+      </div>      
+      )}
+    </>
   );
 };
 
