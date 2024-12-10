@@ -37,11 +37,10 @@ const CellInfos = ({ cursorPos }) => {
 
   return (
     <div className="cellinfos-container top left">
-        {true ? (
+        {isMobile ? (
           <>
             <p>X: {cellPos ? cellPos.pos_x : "loading..."} Y: {cellPos ? cellPos.pos_y : "loading..."}</p>
             <p>Modified by: {isFetching ? "loading..." : (cellInfos ? cellInfos.User.username : "Unknown")}</p>
-            <p>{isMobile ? 'true' : 'false'}</p>
           </>
         ) : (
           <>

@@ -12,10 +12,8 @@
     border: 2px solid black;
 }
 
-@media (max-width: 768px) {
-    .cellinfos-container {
-        width: 40vw;
-        height: fit-content;
-
-    }
-  }
+.cellinfos-container * {
+    margin-left: 1vw;
+    margin-right: 1vw;
+    margin-bottom: 0.5vh;
+}
