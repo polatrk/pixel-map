@@ -10,4 +10,5 @@
 
     border-radius: 1vw;
     border: 2px, solid, black;
+    box-sizing: border-box;
 }

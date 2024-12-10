@@ -12,7 +12,7 @@ const CustomCursor = () => {
     const handleMouseMove = (e) => {
       customCursor.style.left = `${e.clientX}px`
       customCursor.style.top = `${e.clientY}px`
-    };
+    }
 
     // add listeners
     document.addEventListener("mousemove", handleMouseMove)
@@ -20,8 +20,8 @@ const CustomCursor = () => {
     // cleanup the event listener on unmount
     return () => {
       document.removeEventListener("mousemove", handleMouseMove)
-    };
-  }, []);
+    }
+  }, [])
 
   return (
     <div id='custom-cursor' className={styles["custom-cursor_container"]}>
