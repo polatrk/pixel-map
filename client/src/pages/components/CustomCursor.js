@@ -25,14 +25,14 @@ const CustomCursor = () => {
   }, [])
 
   return (
-    <>
+    <div id='custom-cursor' className={styles["custom-cursor_container"]}>
       {isMobile && (
-      <div id='custom-cursor' className={styles["custom-cursor_container"]}>
-        <div className={styles["custom-cursor_color"]} style={{backgroundColor: selectedColor}} />
-        <img src={customCursorOutlineImg} alt="customcursor_outline.png" className={styles["custom-cursor_outline"]} />
-      </div>      
+        <>
+          <div className={styles["custom-cursor_color"]} style={{backgroundColor: selectedColor}} />
+          <img src={customCursorOutlineImg} alt="customcursor_outline.png" className={styles["custom-cursor_outline"]} />
+        </>
       )}
-    </>
+    </div>      
   );
 };
 
