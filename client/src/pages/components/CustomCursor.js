@@ -13,6 +13,7 @@ const CustomCursor = () => {
     const handleMouseMove = (e) => {
       customCursor.style.left = `${e.clientX}px`
       customCursor.style.top = `${e.clientY}px`
+      console.log(isMobile)
     }
 
     // add listeners
@@ -26,7 +27,7 @@ const CustomCursor = () => {
 
   return (
     <div id='custom-cursor' className={styles["custom-cursor_container"]}>
-      {isMobile && (
+      {!isMobile && (
         <>
           <div className={styles["custom-cursor_color"]} style={{backgroundColor: selectedColor}} />
           <img src={customCursorOutlineImg} alt="customcursor_outline.png" className={styles["custom-cursor_outline"]} />
