@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import axiosInstance from "../../axiosInstance"
 import "../../css/CellInfos.css"
 import { CELL_SIZE } from "../../config/constants"
+import { isMobile } from 'react-device-detect';
 
 const CellInfos = ({ cursorPos }) => {
   const [cellInfos, setCellInfos] = useState(null)
@@ -36,11 +37,21 @@ const CellInfos = ({ cursorPos }) => {
 
   return (
     <div className="cellinfos-container top left">
-        <h4>Coords</h4>
-        <p>X: {cellPos ? cellPos.pos_x : "loading..."}</p>
-        <p>Y: {cellPos ? cellPos.pos_y : "loading..."}</p>
-        <h4>modified by:</h4>
-        <p>{isFetching ? "loading..." : (cellInfos ? cellInfos.User.username : "Unknown")}</p>
+        {isMobile ? (
+          <>
+            <p>X: {cellPos ? cellPos.pos_x : "loading..."}
+               Y: {cellPos ? cellPos.pos_y : "loading..."}</p>
+            <p>modified by: {isFetching ? "loading..." : (cellInfos ? cellInfos.User.username : "Unknown")}</p>
+          </>
+        ) : (
+          <>
+            <h4>Coords</h4>
+            <p>X: {cellPos ? cellPos.pos_x : "loading..."}</p>
+            <p>Y: {cellPos ? cellPos.pos_y : "loading..."}</p>
+            <h4>modified by:</h4>
+            <p>{isFetching ? "loading..." : (cellInfos ? cellInfos.User.username : "Unknown")}</p>
+          </>
+        )}
     </div>
   )
 }
