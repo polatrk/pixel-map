@@ -10,7 +10,9 @@ import Profile from './components/modal/Profile'
 import CellInfos from './components/CellInfos'
 import { CELL_SIZE } from '../config/constants'
 import CustomCursor from './components/CustomCursor'
-import { usePinch, useWheel } from '@use-gesture/react';
+import { usePinch, useWheel } from '@use-gesture/react'
+import MobileModeSwitch from './components/MobileModeSwitch'
+import { isMobile } from 'react-device-detect'
 
 const MainBoard = () => {
     // dom elements
@@ -18,10 +20,11 @@ const MainBoard = () => {
     const moveDivRef = useRef(null)
 
     // modal related
-    const [isLoginModalOpen, setLoginModalOpen] = useState(false);
-    const [isSignupModalOpen, setSignupModalOpen] = useState(false);
-    const [isProfileModalOpen, setProfileModalOpen] = useState(false);
-    const [cursorPos, setCursorPos] = useState({});
+    const [isLoginModalOpen, setLoginModalOpen] = useState(false)
+    const [isSignupModalOpen, setSignupModalOpen] = useState(false)
+    const [isProfileModalOpen, setProfileModalOpen] = useState(false)
+    const [cursorPos, setCursorPos] = useState({})
+    const [isInDrawingMode, setIsInDrawingMode] = useState(!isMobile)
 
     const toggleLoginModal = () => {
         setSignupModalOpen(false)
@@ -98,7 +101,6 @@ const MainBoard = () => {
             }
         }
 
-
         if (moveDivRef.current) {
             // for computer
             moveDivRef.current.addEventListener("mousemove", handleMouseMove)
@@ -114,7 +116,6 @@ const MainBoard = () => {
             moveDivRef.current.addEventListener("touchstart", (e) => {
                 bIsMouseDown = true
                 const touch = e.touches[0];
-                console.log(touch.clientX)
                 clickPosInCanvas = getCursorPosInCanvas({pos_x: touch.clientX, pos_y: touch.clientY})
             })
         }
@@ -138,13 +139,13 @@ const MainBoard = () => {
         <Header className='header' toggleLoginModal={toggleLoginModal} toggleSignupModal={toggleSignupModal} toggleProfileModal={toggleProfileModal} />
         <div id='zoom-controller' ref={zoomDivRef}>
             <div id='move-controller' ref={moveDivRef}>
-                <DrawingBoard toggleLoginModal={toggleLoginModal}/>
+                <DrawingBoard toggleLoginModal={toggleLoginModal} isInDrawingMode={isInDrawingMode} />
             </div>
         </div>
-
         <ColorPalette className="color-palette" />
         <CellInfos cursorPos={cursorPos} className="cell-infos"/>
         <CustomCursor />
+        <MobileModeSwitch setIsInDrawingMode={setIsInDrawingMode}/>
     </div>
   )
 }

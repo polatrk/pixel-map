@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import {  DrawMultipleCells, DrawSingleCell } from '../utils/DrawingUtils'
 import axiosInstance from '../axiosInstance'
 import { getCursorPosInCanvas } from '../utils/TransformUtils'
@@ -9,7 +9,7 @@ import { GetUserInfos } from '../utils/UserInfos'
 import { OnClickInCanvas } from '../utils/DrawingBoardControls'
 import { ColorContext } from "../utils/context/ColorContext";
 
-const DrawingBoard = ({toggleLoginModal}) => {
+const DrawingBoard = ({toggleLoginModal, isInDrawingMode}) => {
   const [isLoaded, setLoaded] = useState(false)
   const [canvasMatrix, setCanvasMatrix] = useState()
   const [drawingBoardSize, setDrawingBoardSize] = useState({x: 0, y: 0})
@@ -17,7 +17,7 @@ const DrawingBoard = ({toggleLoginModal}) => {
 
 
   // avoid rerender when selected color changes
-  const selectedColorRef = React.useRef(selectedColor);
+  const selectedColorRef = useRef(selectedColor)
   useEffect(() => {
     selectedColorRef.current = selectedColor;
   }, [selectedColor]);
@@ -38,8 +38,10 @@ const DrawingBoard = ({toggleLoginModal}) => {
     const handleClickOnCanvas = (e) => {
       // make srue that the canvas isn't moving and we are in bounds
       if(Math.abs(e.clientX - downClickPos.pos_x) < 5 && Math.abs(e.clientY - downClickPos.pos_y) < 5)
-            if(GetUserInfos().isLogged)
-              OnClickInCanvas(e, socket, selectedColorRef.current)
+            if(GetUserInfos().isLogged) {
+              if(isInDrawingMode)
+                OnClickInCanvas(e, socket, selectedColorRef.current)             
+            }
             else
               toggleLoginModal();
     };
@@ -70,7 +72,6 @@ const DrawingBoard = ({toggleLoginModal}) => {
     drawingBoard.addEventListener('mouseleave', () => {
       canvasCursor.style.visibility = 'hidden'
     })
-
 
     // fetch data
     axiosInstance.get('/properties/size') // Fetch size
@@ -117,7 +118,7 @@ const DrawingBoard = ({toggleLoginModal}) => {
       drawingBoard.removeEventListener('mousedown', (e) => downClickPos = {pos_x: e.clientX, pos_y: e.clientY});
       drawingBoard.removeEventListener('mousemove', handleMouseMove);
     };
-    }, []);  // empty dependency array to run this effect only once on component mount
+    }, [isInDrawingMode]);  // empty dependency array to run this effect only once on component mount
 
   return (
     <div style={{width: `${CANVAS_SIZE*drawingBoardSize.x}px`}} id='drawing-board'>

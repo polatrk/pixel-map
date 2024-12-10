@@ -13,7 +13,6 @@ const CustomCursor = () => {
     const handleMouseMove = (e) => {
       customCursor.style.left = `${e.clientX}px`
       customCursor.style.top = `${e.clientY}px`
-      console.log(isMobile)
     }
 
     // add listeners
