@@ -13,7 +13,7 @@ const ColorPalette = () => {
         currentSelectedColor.current.style.border = ''
 
       currentSelectedColor.current = e.target
-      currentSelectedColor.current.style.border = '3px, solid, black'
+      currentSelectedColor.current.style.border = '3px solid black'
       
       setSelectedColor(color)
     }
