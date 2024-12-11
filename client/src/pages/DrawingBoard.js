@@ -8,8 +8,9 @@ import '../css/DrawingBoard.css'
 import { GetUserInfos } from '../utils/UserInfos'
 import { OnClickInCanvas } from '../utils/DrawingBoardControls'
 import { ColorContext } from "../utils/context/ColorContext";
+import { isMobile } from 'react-device-detect'
 
-const DrawingBoard = ({toggleLoginModal, isInDrawingMode}) => {
+const DrawingBoard = ({toggleLoginModal}) => {
   const [isLoaded, setLoaded] = useState(false)
   const [canvasMatrix, setCanvasMatrix] = useState()
   const [drawingBoardSize, setDrawingBoardSize] = useState({x: 0, y: 0})
@@ -39,7 +40,7 @@ const DrawingBoard = ({toggleLoginModal, isInDrawingMode}) => {
       // make srue that the canvas isn't moving and we are in bounds
       if(Math.abs(e.clientX - downClickPos.pos_x) < 5 && Math.abs(e.clientY - downClickPos.pos_y) < 5)
             if(GetUserInfos().isLogged) {
-              if(isInDrawingMode)
+              if(!isMobile)
                 OnClickInCanvas(e, socket, selectedColorRef.current)             
             }
             else
@@ -118,7 +119,7 @@ const DrawingBoard = ({toggleLoginModal, isInDrawingMode}) => {
       drawingBoard.removeEventListener('mousedown', (e) => downClickPos = {pos_x: e.clientX, pos_y: e.clientY});
       drawingBoard.removeEventListener('mousemove', handleMouseMove);
     };
-    }, [isInDrawingMode]);  // empty dependency array to run this effect only once on component mount
+    }, []);  // empty dependency array to run this effect only once on component mount
 
   return (
     <div style={{width: `${CANVAS_SIZE*drawingBoardSize.x}px`}} id='drawing-board'>

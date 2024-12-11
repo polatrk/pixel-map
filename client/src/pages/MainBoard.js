@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import DrawingBoard from './DrawingBoard'
 import ColorPalette from './components/ColorPalette'
 import { ControlZoom, getCursorPosInCanvas, ControlMoveWithTouch, ControlMoveWithMouse } from '../utils/TransformUtils'
@@ -11,8 +11,10 @@ import CellInfos from './components/CellInfos'
 import { CELL_SIZE } from '../config/constants'
 import CustomCursor from './components/CustomCursor'
 import { usePinch, useWheel } from '@use-gesture/react'
-import MobileModeSwitch from './components/MobileModeSwitch'
 import { isMobile } from 'react-device-detect'
+import { GetUserInfos } from '../utils/UserInfos'
+import { DrawSingleCell } from '../utils/DrawingUtils'
+import { ColorContext } from '../utils/context/ColorContext'
 
 const MainBoard = () => {
     // dom elements
@@ -24,7 +26,9 @@ const MainBoard = () => {
     const [isSignupModalOpen, setSignupModalOpen] = useState(false)
     const [isProfileModalOpen, setProfileModalOpen] = useState(false)
     const [cursorPos, setCursorPos] = useState({})
-    const [isInDrawingMode, setIsInDrawingMode] = useState(!isMobile)
+
+    // other
+    const { selectedColor } = useContext(ColorContext)
 
     const toggleLoginModal = () => {
         setSignupModalOpen(false)
@@ -42,10 +46,10 @@ const MainBoard = () => {
         setProfileModalOpen(!isProfileModalOpen)
     }
 
-    // Use the usePinch hook
+    // use the usePinch hook
     usePinch(
         ({ offset: [d] }) => {
-        ControlZoom(d, zoomDivRef.current, true)
+            ControlZoom(d, zoomDivRef.current, true)
         },
         {
         target: zoomDivRef,
@@ -69,6 +73,22 @@ const MainBoard = () => {
             preventDefault: true,
         }
     );
+
+    const onDrawButtonClicked = () => {
+        const cellPos = {
+            pos_x: Math.floor(cursorPos.pos_x / CELL_SIZE),
+            pos_y: Math.floor(cursorPos.pos_y / CELL_SIZE),
+          }
+
+        const cellData = {
+            pos_x: cellPos.pos_x,
+            pos_y: cellPos.pos_y,
+            color: selectedColor,
+            modified_by: GetUserInfos().id
+        };
+    
+        DrawSingleCell(cellData)
+    }
 
     useEffect(() => {
         const canvas = moveDivRef.current.querySelector("#drawing-board")
@@ -139,13 +159,19 @@ const MainBoard = () => {
         <Header className='header' toggleLoginModal={toggleLoginModal} toggleSignupModal={toggleSignupModal} toggleProfileModal={toggleProfileModal} />
         <div id='zoom-controller' ref={zoomDivRef}>
             <div id='move-controller' ref={moveDivRef}>
-                <DrawingBoard toggleLoginModal={toggleLoginModal} isInDrawingMode={isInDrawingMode} />
+                <DrawingBoard toggleLoginModal={toggleLoginModal} />
             </div>
         </div>
-        <ColorPalette className="color-palette" />
+        <div className='bot bottom-container'>
+            <button id='drawButton' 
+            type='button' 
+            className='btn btn-dark' 
+            onClick={onDrawButtonClicked}
+            hidden={!isMobile}>Draw</button>
+            <ColorPalette />
+        </div>
         <CellInfos cursorPos={cursorPos} className="cell-infos"/>
         <CustomCursor />
-        <MobileModeSwitch setIsInDrawingMode={setIsInDrawingMode}/>
     </div>
   )
 }

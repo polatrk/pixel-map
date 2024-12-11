@@ -18,10 +18,11 @@ const Signup = ({ isModalOpen, toggleSignupModal, toggleLoginModal}) => {
   
       setIsLoading(false)
 
-      if(signupError.message) {
-        notify('error', signupError.message)
-        return
-      }
+      if(signupError)
+        if(signupError.status !== 200) {
+          notify("error", signupError.message)
+          return
+        }
   
       notify('success', "Verification email sent. Please check your mailbox.")
 

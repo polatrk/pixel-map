@@ -151,7 +151,7 @@ const signup = async (req, res) => {
             text: `${url}/verify/?token=${token}`,
         });
 
-        return res.status(200).json({ message: "Verification email sent. Please check your mailbox." });
+        return res.json({ message: "Verification email sent. Please check your mailbox." });
     } catch (error) {
         console.error(error);
         return sendErrorResponse(res, 500, "Internal Server Error.");

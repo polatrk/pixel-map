@@ -32,6 +32,7 @@ export function ControlZoom(zoomValue, zoomDiv, isUsingTrackpad) {
     } else {
         newScale = zoomValue * 1.5
     }
+
     const clampedScale = Math.max(Math.min(MAX_ZOOM, newScale), MIN_ZOOM)
 
     zoomDiv.style.transform = `scale(${clampedScale})`;

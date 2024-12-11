@@ -29,6 +29,15 @@
     z-index: 0;
 }
 
+.bottom-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5vh;
+
+    align-items: center;
+    width: 87%;
+}
+
 @media (max-width: 768px) {
     .main-board {
         cursor: pointer;
