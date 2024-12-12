@@ -48,7 +48,7 @@ const MainBoard = () => {
 
     usePinch(
         ({ offset: [d] }) => {
-            ControlZoom(d, zoomDivRef.current, true)
+            ControlZoom(d, zoomDivRef.current)
         },
         {
         target: zoomDivRef,
@@ -60,7 +60,7 @@ const MainBoard = () => {
     useWheel(
         ({ delta: [dx, dy], event }) => {
             if(Math.abs(dy) === 100)                            // case where user is using the mouse wheel
-                ControlZoom(((dy/100)*0.075) * -1, zoomDivRef.current, false)
+                ControlZoom(((dy/100)*0.075) * -1, zoomDivRef.current)
             else {                                              // case where user is using the trackpad
                 event.preventDefault();
                 ControlMoveWithTouch(moveDivRef.current, {x: dx, y: dy})
