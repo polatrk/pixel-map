@@ -34,6 +34,18 @@ export function ControlMoveWithTouch(moveDiv, moveOffset) {
     const zoomDiv = moveDiv.closest("#zoom-controller")
     let currentZoom = zoomDiv.style.zoom ? zoomDiv.style.zoom : 1
 
-    moveDiv.style.left = `${(parseFloat(moveDiv.style.left) ? parseFloat(moveDiv.style.left) : 0) - (moveOffset.x / currentZoom)}px`
-    moveDiv.style.top = `${(parseFloat(moveDiv.style.top) ? parseFloat(moveDiv.style.top) : 0) - (moveOffset.y / currentZoom)}px`
+    moveDiv.style.left = `${(parseFloat(moveDiv.style.left) ? parseFloat(moveDiv.style.left) : 0) - (moveOffset.x)}px`
+    moveDiv.style.top = `${(parseFloat(moveDiv.style.top) ? parseFloat(moveDiv.style.top) : 0) - (moveOffset.y)}px`
 }
+
+// export function ControlMoveWithTouch(moveDiv, moveOffset) {
+//     const zoomDiv = moveDiv.closest("#zoom-controller")
+
+//     const regex = /scale\(([^)]+)\)/i
+//     const transform = zoomDiv.style.transform
+//     let currentScale = 1
+//     if(transform !== '')
+//         currentScale = parseFloat(regex.exec(transform)[1])
+
+//     moveDiv.style.left = `${(parseFloat(moveDiv.style.left) ? parseFloat(moveDiv.style.left) : 0) - (moveOffset.x / currentScale)}px`
+//     moveDiv.style.top = `${(parseFloat(moveDiv.style.top) ? parseFloat(moveDiv.style.top) : 0) - (moveOffset.y / currentScale)}px`
