@@ -35,7 +35,8 @@ export function ControlZoom(zoomValue, zoomDiv, isUsingTrackpad) {
 
     const clampedScale = newScale //Math.max(Math.min(MAX_ZOOM, newScale), MIN_ZOOM)
 
-    zoomDiv.style.transform = `scale(${clampedScale})`;
+    // zoomDiv.style.transform = `scale(${clampedScale})`;
+    zoomDiv.style.zoom = newScale;
 }
 
 export function ControlMoveWithMouse(event, moveDiv, lastMousePosInCanvas) {
