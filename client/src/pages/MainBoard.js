@@ -10,7 +10,7 @@ import Profile from './components/modal/Profile'
 import CellInfos from './components/CellInfos'
 import { CELL_SIZE } from '../config/constants'
 import CustomCursor from './components/CustomCursor'
-import { usePinch, useWheel } from '@use-gesture/react'
+import { useGesture } from '@use-gesture/react'
 import { isMobile } from 'react-device-detect'
 import { GetUserInfos } from '../utils/UserInfos'
 import { DrawSingleCell } from '../utils/DrawingUtils'
@@ -46,32 +46,25 @@ const MainBoard = () => {
         setProfileModalOpen(!isProfileModalOpen)
     }
 
-    usePinch(
-        ({ offset: [d] }) => {
-            ControlZoom(d, zoomDivRef.current)
-        },
+    useGesture(
         {
-        target: zoomDivRef,
-        eventOptions: { passive: false },
-        preventDefault: true,
-        }
-    )
-
-    useWheel(
-        ({ delta: [dx, dy], event }) => {
-            if(Math.abs(dy) === 100)                            // case where user is using the mouse wheel
-                ControlZoom(((dy/100)*0.075) * -1, zoomDivRef.current)
-            else {                                              // case where user is using the trackpad
-                event.preventDefault();
-                ControlMoveWithTouch(moveDivRef.current, {x: dx, y: dy})
+            onPinch: ({ offset: [d] }) => {
+                ControlZoom(d, zoomDivRef.current)
+            },
+            onWheel: ({ delta: [dx, dy], event }) => {
+                if(Math.abs(dy) === 100)                            // case where user is using the mouse wheel
+                    ControlZoom(((dy/100)*0.075) * -1, zoomDivRef.current)
+                else {                                              // case where user is using the trackpad
+                    event.preventDefault();
+                    ControlMoveWithTouch(moveDivRef.current, {x: dx, y: dy})
+                }
             }
         },
         {
-            target: moveDivRef,
+            target: zoomDivRef,
             eventOptions: { passive: false },
-            preventDefault: true,
         }
-    );
+    )
 
     const onDrawButtonClicked = () => {
         const cellPos = {
@@ -162,6 +155,7 @@ const MainBoard = () => {
             </div>
         </div>
         <div className='bot bottom-container'>
+            <h1>{zoomDivRef.current ? zoomDivRef.current.style?.zoom : 'x'}</h1>
             <button id='drawButton' 
             type='button' 
             className='btn btn-dark' 
