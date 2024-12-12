@@ -1,4 +1,4 @@
-export const CELL_SIZE = 20
+export const CELL_SIZE = 1
 export const CELL_PER_CANVAS = 100
 export const CANVAS_SIZE = CELL_SIZE*CELL_PER_CANVAS
 
