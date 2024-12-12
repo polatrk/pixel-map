@@ -105,7 +105,7 @@ const MainBoard = () => {
             else if(e.type.includes('touch')) {
                 eventOrigin = e.touches[0];
             }
-
+            
             if(bIsMouseDown)
                 ControlMoveWithMouse(eventOrigin, moveDivRef.current, clickPosInCanvas)
 

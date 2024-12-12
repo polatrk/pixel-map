@@ -37,6 +37,7 @@ const DrawingBoard = ({toggleLoginModal}) => {
 
     // define handler funcs
     const handleClickOnCanvas = (e) => {
+      alert(e.clientX)
       // make srue that the canvas isn't moving and we are in bounds
       if(Math.abs(e.clientX - downClickPos.pos_x) < 5 && Math.abs(e.clientY - downClickPos.pos_y) < 5)
             if(GetUserInfos().isLogged) {
