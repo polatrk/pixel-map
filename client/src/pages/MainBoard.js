@@ -149,7 +149,7 @@ const MainBoard = () => {
         <Profile isModalOpen={isProfileModalOpen} toggleProfileModal={toggleProfileModal}/>
 
         <Header className='header' toggleLoginModal={toggleLoginModal} toggleSignupModal={toggleSignupModal} toggleProfileModal={toggleProfileModal} />
-        <div id='zoom-controller' ref={zoomDivRef}>
+        <div id='zoom-controller' ref={zoomDivRef} style={{backgroundColor: 'red'}}>
             <div id='move-controller' ref={moveDivRef}>
                 <DrawingBoard toggleLoginModal={toggleLoginModal} />
             </div>
