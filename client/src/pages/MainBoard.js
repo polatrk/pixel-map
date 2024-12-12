@@ -46,7 +46,6 @@ const MainBoard = () => {
         setProfileModalOpen(!isProfileModalOpen)
     }
 
-    // use the usePinch hook
     usePinch(
         ({ offset: [d] }) => {
             ControlZoom(d, zoomDivRef.current, true)
@@ -56,7 +55,7 @@ const MainBoard = () => {
         eventOptions: { passive: false },
         preventDefault: true,
         }
-    );
+    )
 
     useWheel(
         ({ delta: [dx, dy], event }) => {
