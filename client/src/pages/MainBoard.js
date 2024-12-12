@@ -155,7 +155,7 @@ const MainBoard = () => {
             </div>
         </div>
         <div className='bot bottom-container'>
-            <h1>{zoomDivRef.current ? zoomDivRef.current.style?.zoom : 'x'}</h1>
+            {/* <h1>{zoomDivRef.current ? zoomDivRef.current.style?.zoom : 'x'}</h1> */}
             <button id='drawButton' 
             type='button' 
             className='btn btn-dark' 
