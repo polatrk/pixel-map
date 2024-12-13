@@ -1,17 +1,54 @@
 import { MAX_ZOOM, MIN_ZOOM } from "../config/constants"
 
-export function getCursorPosInCanvas(clickPos) {
-    const zoomDiv = document.getElementById("zoom-controller")
-    const moveDiv = document.getElementById("move-controller")
-    const moveDivBounds = moveDiv.getBoundingClientRect()
-    const currentZoom = zoomDiv.style.zoom ? zoomDiv.style.zoom : 1
-    const borderSize = getComputedStyle(moveDiv).getPropertyValue("border-top-width").replace('px','') // to exclude the borders
-    const rel_x = (clickPos.pos_x - moveDivBounds.left)/currentZoom
-    const rel_y = (clickPos.pos_y - moveDivBounds.top)/currentZoom
+// export function getCursorPosInCanvas(clickPos) {
+//     const zoomDiv = document.getElementById("zoom-controller")
+//     const moveDiv = document.getElementById("move-controller")
+//     const moveDivBounds = moveDiv.getBoundingClientRect()
+//     const currentZoom = zoomDiv.style.zoom ? zoomDiv.style.zoom : 1
+//     const borderSize = getComputedStyle(moveDiv).getPropertyValue("border-top-width").replace('px','') // to exclude the borders
+//     const rel_x = (clickPos.pos_x - moveDivBounds.left)/currentZoom
+//     const rel_y = (clickPos.pos_y - moveDivBounds.top)/currentZoom
     
-    console.log(borderSize)
-    return {pos_x: Math.floor(rel_x-borderSize), pos_y: Math.floor(rel_y-borderSize)}
+//     console.log(borderSize)
+//     return {pos_x: Math.floor(rel_x-borderSize), pos_y: Math.floor(rel_y-borderSize)}
+// }
+
+export function getCursorPosInCanvas(clickPos) {
+    const zoomDiv = document.getElementById("zoom-controller");
+    const moveDiv = document.getElementById("move-controller");
+
+    // Get the bounding box of the moveDiv
+    const moveDivBounds = moveDiv.getBoundingClientRect();
+
+    // Get the current zoom factor (default to 1 if not set)
+    const currentZoom = parseFloat(zoomDiv.style.zoom) || 1;
+
+    // Calculate the zoom origin for proper scaling
+    const zoomOrigin = {
+        x: moveDivBounds.left + moveDivBounds.width / 2,
+        y: moveDivBounds.top + moveDivBounds.height / 2,
+    };
+
+    // Adjust the cursor position for zoom and transform
+    const adjustedX =
+        (clickPos.pos_x - moveDivBounds.left) / currentZoom +
+        (zoomOrigin.x - moveDivBounds.left) * (1 - 1 / currentZoom);
+
+    const adjustedY =
+        (clickPos.pos_y - moveDivBounds.top) / currentZoom +
+        (zoomOrigin.y - moveDivBounds.top) * (1 - 1 / currentZoom);
+
+    // Account for border size
+    const borderSize = parseFloat(
+        getComputedStyle(moveDiv).getPropertyValue("border-top-width").replace("px", "")
+    );
+
+    return {
+        pos_x: Math.floor(adjustedX - borderSize),
+        pos_y: Math.floor(adjustedY - borderSize),
+    };
 }
+
 
 export function ControlZoom(zoomValue, zoomDiv) {
     zoomDiv.style.zoom = zoomValue;
