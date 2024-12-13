@@ -20,6 +20,7 @@ const MainBoard = () => {
     // dom elements
     const zoomDivRef = useRef(null)
     const moveDivRef = useRef(null)
+    const sensorDivRef = useRef(null)
 
     // modal related
     const [isLoginModalOpen, setLoginModalOpen] = useState(false)
@@ -52,7 +53,7 @@ const MainBoard = () => {
         ControlZoom(d, zoomDivRef.current, true)
         },
         {
-        target: zoomDivRef,
+        target: sensorDivRef.current,
         eventOptions: { passive: false },
         preventDefault: true,
         }
@@ -68,7 +69,7 @@ const MainBoard = () => {
             }
         },
         {
-            target: moveDivRef,
+            target: sensorDivRef.current,
             eventOptions: { passive: false },
             preventDefault: true,
         }
@@ -122,19 +123,19 @@ const MainBoard = () => {
             }
         }
 
-        if (moveDivRef.current) {
+        if(sensorDivRef.current) {
             // for computer
-            moveDivRef.current.addEventListener("mousemove", handleMouseMove)
-            moveDivRef.current.addEventListener("mouseup", () => {bIsMouseDown = false})
-            moveDivRef.current.addEventListener("mousedown", (e) => {
+            sensorDivRef.current.addEventListener("mousemove", handleMouseMove)
+            sensorDivRef.current.addEventListener("mouseup", () => {bIsMouseDown = false})
+            sensorDivRef.current.addEventListener("mousedown", (e) => {
                 bIsMouseDown = true
                 clickPosInCanvas = getCursorPosInCanvas({pos_x: e.clientX, pos_y: e.clientY})
             })
 
             // for mobile
-            moveDivRef.current.addEventListener("touchmove", handleMouseMove)
-            moveDivRef.current.addEventListener("touchend", () => {bIsMouseDown = false})
-            moveDivRef.current.addEventListener("touchstart", (e) => {
+            sensorDivRef.current.addEventListener("touchmove", handleMouseMove)
+            sensorDivRef.current.addEventListener("touchend", () => {bIsMouseDown = false})
+            sensorDivRef.current.addEventListener("touchstart", (e) => {
                 bIsMouseDown = true
                 const touch = e.touches[0];
                 clickPosInCanvas = getCursorPosInCanvas({pos_x: touch.clientX, pos_y: touch.clientY})
@@ -143,9 +144,9 @@ const MainBoard = () => {
 
         // Cleanup the event listener on unmount
         return () => {
-            if (moveDivRef.current) {
-                moveDivRef.current.removeEventListener("mousemove", handleMouseMove)
-                moveDivRef.current.removeEventListener("touchmove", handleMouseMove)
+            if (sensorDivRef.current) {
+                sensorDivRef.current.removeEventListener("mousemove", handleMouseMove)
+                sensorDivRef.current.removeEventListener("touchmove", handleMouseMove)
             }
         }
     }, [])
@@ -158,10 +159,12 @@ const MainBoard = () => {
         <Profile isModalOpen={isProfileModalOpen} toggleProfileModal={toggleProfileModal}/>
 
         <Header className='header' toggleLoginModal={toggleLoginModal} toggleSignupModal={toggleSignupModal} toggleProfileModal={toggleProfileModal} />
+       <div style={{width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center'}} ref={sensorDivRef}>
         <div id='zoom-controller' ref={zoomDivRef}>
             <div id='move-controller' ref={moveDivRef}>
                 <DrawingBoard toggleLoginModal={toggleLoginModal} />
             </div>
+        </div>
         </div>
         <div className='bot bottom-container'>
             <button id='drawButton' 
@@ -171,6 +174,7 @@ const MainBoard = () => {
             hidden={!isMobile}>Draw</button>
             <ColorPalette />
         </div>
+        
         <CellInfos cursorPos={cursorPos} className="cell-infos"/>
         <CustomCursor />
     </div>

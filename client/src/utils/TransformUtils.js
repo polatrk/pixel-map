@@ -32,7 +32,6 @@ export function ControlMoveWithMouse(event, moveDiv, lastMousePosInCanvas) {
     const rel_x = (event.clientX - zooDivBounds.left*boundsFactor)/currentZoom
     const rel_y = (event.clientY - zooDivBounds.top*boundsFactor)/currentZoom
     
-    console.log('(', event.clientX,  '-',  zooDivBounds.left, ')/', currentZoom, '=', rel_x)
     moveDiv.style.left = `${(rel_x - borderSize) - lastMousePosInCanvas.pos_x}px`
     moveDiv.style.top = `${(rel_y - borderSize) - lastMousePosInCanvas.pos_y}px`
 }
