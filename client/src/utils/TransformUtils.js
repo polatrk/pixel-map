@@ -1,7 +1,7 @@
 import { MAX_ZOOM, MIN_ZOOM } from "../config/constants"
 
 export function getCursorPosInCanvas(clickPos) {
-    console.log(clickPos)
+    console.log(clickPos.pos_x, clickPos.pos_y)
     const zoomDiv = document.getElementById("zoom-controller")
     const moveDiv = document.getElementById("move-controller")
     const moveDivBounds = moveDiv.getBoundingClientRect()
