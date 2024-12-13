@@ -91,7 +91,7 @@ const MainBoard = () => {
         DrawSingleCell(cellData)
     }
 
-    const [pos, setpos] = useState()
+    const [pos, setpos] = useState({x: 'none', y: 'none'})
 
     useEffect(() => {
         const canvas = moveDivRef.current.querySelector("#drawing-board")
