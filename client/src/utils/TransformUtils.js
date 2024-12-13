@@ -1,6 +1,7 @@
 import { MAX_ZOOM, MIN_ZOOM } from "../config/constants"
 
 export function getCursorPosInCanvas(clickPos) {
+    console.log(clickPos)
     const zoomDiv = document.getElementById("zoom-controller")
     const moveDiv = document.getElementById("move-controller")
     const moveDivBounds = moveDiv.getBoundingClientRect()
@@ -19,7 +20,6 @@ export function ControlZoom(zoomValue, zoomDiv) {
 export function ControlMoveWithMouse(event, moveDiv, lastMousePosInCanvas) {
     const zoomDiv = moveDiv.closest("#zoom-controller")
     const zooDivBounds = zoomDiv.getBoundingClientRect()
-    console.log(lastMousePosInCanvas.pos_x, '/', lastMousePosInCanvas.pos_y)
     const currentZoom = parseFloat(zoomDiv.style.zoom || 1);
 
     const borderSize = parseFloat(
