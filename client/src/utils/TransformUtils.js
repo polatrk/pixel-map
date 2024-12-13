@@ -7,8 +7,8 @@ export function getCursorPosInCanvas(clickPos) {
     const currentZoom = zoomDiv.style.zoom ? zoomDiv.style.zoom : 1
     const borderSize = getComputedStyle(moveDiv).getPropertyValue("border-top-width").replace('px','') // to exclude the borders
 
-    const rel_x = (clickPos.pos_x - moveDivBounds.left)/currentZoom
-    const rel_y = (clickPos.pos_y - moveDivBounds.top)/currentZoom
+    const rel_x = (clickPos.pos_x - moveDivBounds.left/currentZoom)/currentZoom
+    const rel_y = (clickPos.pos_y - moveDivBounds.top/currentZoom)/currentZoom
     
     return {pos_x: Math.floor(rel_x-borderSize), pos_y: Math.floor(rel_y-borderSize)}
 }
@@ -26,12 +26,10 @@ export function ControlMoveWithMouse(event, moveDiv, lastMousePosInCanvas) {
         getComputedStyle(moveDiv).getPropertyValue("border-top-width").replace("px", "") // to exclude the border
     );
 
-    const scaleFactor = window.devicePixelRatio || 1;
-
-    const rel_x = (event.clientX - zooDivBounds.left)/(currentZoom * scaleFactor)
-    const rel_y = (event.clientY - zooDivBounds.top)/(currentZoom * scaleFactor)
+    const rel_x = (event.clientX - zooDivBounds.left*currentZoom)/currentZoom
+    const rel_y = (event.clientY - zooDivBounds.top*currentZoom)/currentZoom
     
-    console.log('(', event.clientX,  '-',  zooDivBounds.left, ')/(', currentZoom, '*', scaleFactor, ') =', rel_x)
+    console.log('(', event.clientX,  '-',  zooDivBounds.left, ')/', currentZoom, '=', rel_x)
     moveDiv.style.left = `${(rel_x - borderSize) - lastMousePosInCanvas.pos_x}px`
     moveDiv.style.top = `${(rel_y - borderSize) - lastMousePosInCanvas.pos_y}px`
 }
