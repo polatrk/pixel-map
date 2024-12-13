@@ -34,16 +34,8 @@ export function ControlMoveWithMouse(event, moveDiv, lastMousePosInCanvas) {
 
     // Determine the input type (mouse or touch)
     let clientX, clientY;
-    if (event.type.includes("mouse")) {
-        clientX = event.clientX;
-        clientY = event.clientY;
-    } else if (event.type.includes("touch")) {
-        const touch = event.touches[0]; // Only handle the first touch point
-        clientX = touch.clientX;
-        clientY = touch.clientY;
-    } else {
-        return; // Unsupported event type
-    }
+    clientX = event.clientX;
+    clientY = event.clientY;
 
     const rel_x = (clientX - zoomDivBounds.left) / currentZoom;
     const rel_y = (clientY - zoomDivBounds.top) / currentZoom;
