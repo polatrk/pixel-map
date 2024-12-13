@@ -10,7 +10,7 @@ import Profile from './components/modal/Profile'
 import CellInfos from './components/CellInfos'
 import { CELL_SIZE } from '../config/constants'
 import CustomCursor from './components/CustomCursor'
-import { useGesture, usePinch, useWheel } from '@use-gesture/react'
+import { useGesture } from '@use-gesture/react'
 import { isMobile } from 'react-device-detect'
 import { GetUserInfos } from '../utils/UserInfos'
 import { DrawSingleCell } from '../utils/DrawingUtils'
@@ -30,6 +30,7 @@ const MainBoard = () => {
 
     // other
     const { selectedColor } = useContext(ColorContext)
+    const [isZooming, setIsZooming] = useState(false)
 
     const toggleLoginModal = () => {
         setSignupModalOpen(false)
@@ -47,33 +48,32 @@ const MainBoard = () => {
         setProfileModalOpen(!isProfileModalOpen)
     }
 
-    // Use the usePinch hook
-    usePinch(
-        ({ offset: [d] }) => {
-        ControlZoom(d, zoomDivRef.current, true)
-        },
-        {
-        target: sensorDivRef.current,
-        eventOptions: { passive: false },
-        preventDefault: true,
-        }
-    );
+    useGesture({
+        onPinch: ({ offset: [d], event }) => {
+            event.preventDefault()
+            setIsZooming(true)
 
-    useWheel(
-        ({ delta: [dx, dy], event }) => {
+            ControlZoom(d, zoomDivRef.current, true)
+        },
+        onPinchEnd: () => {
+            setIsZooming(false)
+        },
+        onWheel: ({ delta: [dx, dy], event }) => {
+            event.preventDefault()
+            if(isZooming === true)
+                return
+
             if(Math.abs(dy) === 100)                            // case where user is using the mouse wheel
                 ControlZoom(((dy/100)*0.075) * -1, zoomDivRef.current, false)
             else {                                              // case where user is using the trackpad
-                event.preventDefault();
                 ControlMoveWithTouch(moveDivRef.current, {x: dx, y: dy})
             }
-        },
+        }},
         {
             target: sensorDivRef.current,
             eventOptions: { passive: false },
-            preventDefault: true,
         }
-    );
+    )
 
     const onDrawButtonClicked = () => {
         const cellPos = {
@@ -89,6 +89,11 @@ const MainBoard = () => {
         };
     
         DrawSingleCell(cellData)
+    }
+
+    const onRecenterButtonClicked = () => {
+        moveDivRef.current.style.left = '0px'
+        moveDivRef.current.style.top = '0px'
     }
 
 
@@ -159,19 +164,31 @@ const MainBoard = () => {
         <Profile isModalOpen={isProfileModalOpen} toggleProfileModal={toggleProfileModal}/>
 
         <Header className='header' toggleLoginModal={toggleLoginModal} toggleSignupModal={toggleSignupModal} toggleProfileModal={toggleProfileModal} />
-       <div style={{width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center'}} ref={sensorDivRef}>
-        <div id='zoom-controller' ref={zoomDivRef}>
-            <div id='move-controller' ref={moveDivRef}>
-                <DrawingBoard toggleLoginModal={toggleLoginModal} />
+        <div style={{width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center'}} 
+        ref={sensorDivRef}
+        >
+            <div id='zoom-controller' ref={zoomDivRef}>
+                <div id='move-controller' ref={moveDivRef}>
+                    <DrawingBoard toggleLoginModal={toggleLoginModal} />
+                </div>
             </div>
-        </div>
         </div>
         <div className='bot bottom-container'>
             <button id='drawButton' 
             type='button' 
             className='btn btn-dark' 
             onClick={onDrawButtonClicked}
-            hidden={!isMobile}>Draw</button>
+            hidden={!isMobile}
+            >
+            Draw
+            </button>
+            <button id='recenterButton' 
+            type='button' 
+            className='btn btn-dark' 
+            onClick={onRecenterButtonClicked}
+            >
+            Recenter
+            </button>
             <ColorPalette />
         </div>
         
