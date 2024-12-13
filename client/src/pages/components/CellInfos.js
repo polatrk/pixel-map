@@ -32,7 +32,7 @@ const CellInfos = ({ cursorPos }) => {
       clearInterval(interval)
       setIsFetching(true)
     }
-  }, [cursorPos, encodedPos])
+  }, [cursorPos])
   
 
   return (
