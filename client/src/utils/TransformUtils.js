@@ -1,3 +1,4 @@
+import { isMobile } from "react-device-detect"
 import { MAX_ZOOM, MIN_ZOOM } from "../config/constants"
 
 export function getCursorPosInCanvas(clickPos) {
@@ -7,8 +8,9 @@ export function getCursorPosInCanvas(clickPos) {
     const currentZoom = zoomDiv.style.zoom ? zoomDiv.style.zoom : 1
     const borderSize = getComputedStyle(moveDiv).getPropertyValue("border-top-width").replace('px','') // to exclude the borders
 
-    const rel_x = (clickPos.pos_x - moveDivBounds.left*currentZoom)/currentZoom
-    const rel_y = (clickPos.pos_y - moveDivBounds.top*currentZoom)/currentZoom
+    const boundsFactor = isMobile ? currentZoom : 1
+    const rel_x = (clickPos.pos_x - moveDivBounds.left*boundsFactor)/currentZoom
+    const rel_y = (clickPos.pos_y - moveDivBounds.top*boundsFactor)/currentZoom
     
     return {pos_x: Math.floor(rel_x-borderSize), pos_y: Math.floor(rel_y-borderSize)}
 }
@@ -26,8 +28,9 @@ export function ControlMoveWithMouse(event, moveDiv, lastMousePosInCanvas) {
         getComputedStyle(moveDiv).getPropertyValue("border-top-width").replace("px", "") // to exclude the border
     );
 
-    const rel_x = (event.clientX - zooDivBounds.left*currentZoom)/currentZoom
-    const rel_y = (event.clientY - zooDivBounds.top*currentZoom)/currentZoom
+    const boundsFactor = isMobile ? currentZoom : 1
+    const rel_x = (event.clientX - zooDivBounds.left*boundsFactor)/currentZoom
+    const rel_y = (event.clientY - zooDivBounds.top*boundsFactor)/currentZoom
     
     console.log('(', event.clientX,  '-',  zooDivBounds.left, ')/', currentZoom, '=', rel_x)
     moveDiv.style.left = `${(rel_x - borderSize) - lastMousePosInCanvas.pos_x}px`
