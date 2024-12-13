@@ -8,10 +8,14 @@ require('dotenv').config();
 const app = express();
 
 app.use(cookieParser());
+// app.use(cors({
+//   origin: ['http://localhost:3000', 'https://pixelmap.fr'],
+//   credentials: true
+// }))
 app.use(cors({
-  origin: ['http://localhost:3000', 'https://pixelmap.fr'],
+  origin: '*',
   credentials: true
-}));
+}))
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
