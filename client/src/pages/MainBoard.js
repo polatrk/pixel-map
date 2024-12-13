@@ -65,7 +65,7 @@ const MainBoard = () => {
                 ControlZoom(((dy/100)*0.075) * -1, zoomDivRef.current, false)
             else {                                              // case where user is using the trackpad
                 event.preventDefault();
-                ControlMoveWithTouch(moveDivRef.current, {x: dx, y: dy})
+                // ControlMoveWithTouch(moveDivRef.current, {x: dx, y: dy})
             }
         },
         {
