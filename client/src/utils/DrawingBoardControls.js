@@ -6,7 +6,7 @@ import { DrawSingleCell } from "./DrawingUtils"
 
 export function OnClickInCanvas(event, socket, selectedColor) {
     let cursorPos = getCursorPosInCanvas({pos_x: event.clientX, pos_y: event.clientY})
-    console.log('cursorpos:', cursorPos)
+    
     // round to the cell size
     cursorPos.pos_x = Math.floor(cursorPos.pos_x/CELL_SIZE)
     cursorPos.pos_y = Math.floor(cursorPos.pos_y/CELL_SIZE)
