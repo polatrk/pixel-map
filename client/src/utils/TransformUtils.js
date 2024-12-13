@@ -19,7 +19,7 @@ export function ControlZoom(zoomValue, zoomDiv) {
 export function ControlMoveWithMouse(event, moveDiv, lastMousePosInCanvas) {
     const zoomDiv = moveDiv.closest("#zoom-controller")
     const zooDivBounds = zoomDiv.getBoundingClientRect()
-    console.log(lastMousePosInCanvas)
+    console.log(lastMousePosInCanvas.pos_x, '/', lastMousePosInCanvas.pos_y)
     const currentZoom = parseFloat(zoomDiv.style.zoom || 1);
 
     const borderSize = parseFloat(
