@@ -8,7 +8,7 @@ export function getCursorPosInCanvas(clickPos) {
     const borderSize = getComputedStyle(moveDiv).getPropertyValue("border-top-width").replace('px','') // to exclude the borders
     const rel_x = (clickPos.pos_x - moveDivBounds.left)/currentZoom
     const rel_y = (clickPos.pos_y - moveDivBounds.top)/currentZoom
-    
+    console.log('rel_x:', rel_x, 'rel_y:', rel_y,)
     return {pos_x: Math.floor(rel_x-borderSize), pos_y: Math.floor(rel_y-borderSize)}
 }
 

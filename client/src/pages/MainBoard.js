@@ -91,7 +91,6 @@ const MainBoard = () => {
         DrawSingleCell(cellData)
     }
 
-    const [pos, setpos] = useState({x: 'none', y: 'none'})
 
     useEffect(() => {
         const canvas = moveDivRef.current.querySelector("#drawing-board")
@@ -108,9 +107,6 @@ const MainBoard = () => {
                 eventOrigin = e.touches[0];
             }
             
-            setpos({x: eventOrigin.clientX, y: eventOrigin.clientY})
-            
-
             if(bIsMouseDown)
                 ControlMoveWithMouse(eventOrigin, moveDivRef.current, clickPosInCanvas)
 
@@ -169,7 +165,6 @@ const MainBoard = () => {
             </div>
         </div>
         <div className='bot bottom-container'>
-            <h1>{`${pos.x}, ${pos.y}`}</h1>
             <button id='drawButton' 
             type='button' 
             className='btn btn-dark' 
