@@ -91,6 +91,8 @@ const MainBoard = () => {
         DrawSingleCell(cellData)
     }
 
+    const [pos, setpos] = useState({x: 0, y: 0})
+
     useEffect(() => {
         const canvas = moveDivRef.current.querySelector("#drawing-board")
 
@@ -106,8 +108,9 @@ const MainBoard = () => {
                 eventOrigin = e.touches[0];
             }
             
-            // if(bIsMouseDown)
-            //     ControlMoveWithMouse(eventOrigin, moveDivRef.current, clickPosInCanvas)
+            setpos(eventOrigin.clientX, '/', eventOrigin.clientY)
+            if(bIsMouseDown)
+                ControlMoveWithMouse(eventOrigin, moveDivRef.current, clickPosInCanvas)
 
             // for cell infos
             const cursorPos = getCursorPosInCanvas({pos_x: eventOrigin.clientX, pos_y: eventOrigin.clientY}, canvas)
@@ -164,7 +167,7 @@ const MainBoard = () => {
             </div>
         </div>
         <div className='bot bottom-container'>
-            {/* <h1>{zoomDivRef.current ? zoomDivRef.current.style?.zoom : 'x'}</h1> */}
+            <h1>{pos}</h1>
             <button id='drawButton' 
             type='button' 
             className='btn btn-dark' 
