@@ -9,7 +9,7 @@ export function getCursorPosInCanvas(clickPos) {
     const rel_x = (clickPos.pos_x - moveDivBounds.left)/currentZoom
     const rel_y = (clickPos.pos_y - moveDivBounds.top)/currentZoom
     
-    console.log(currentZoom)
+    console.log(moveDivBounds.left, '/', moveDivBounds.top)
     return {pos_x: Math.floor(rel_x-borderSize), pos_y: Math.floor(rel_y-borderSize)}
 }
 
