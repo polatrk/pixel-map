@@ -9,6 +9,10 @@
     cursor: none;
 }
 
+.dropdown-menu {
+    cursor: pointer;
+}
+
 #move-controller {
     position: relative;
     margin-inline: auto; 

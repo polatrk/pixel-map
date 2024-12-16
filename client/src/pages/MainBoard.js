@@ -15,6 +15,7 @@ import { isMobile } from 'react-device-detect'
 import { GetUserInfos } from '../utils/UserInfos'
 import { DrawSingleCell } from '../utils/DrawingUtils'
 import { ColorContext } from '../utils/context/ColorContext'
+import { useTranslation } from 'react-i18next'
 
 const MainBoard = () => {
     // dom elements
@@ -31,6 +32,7 @@ const MainBoard = () => {
     // other
     const { selectedColor } = useContext(ColorContext)
     const [isZooming, setIsZooming] = useState(false)
+    const { t } = useTranslation();
 
     const toggleLoginModal = () => {
         setSignupModalOpen(false)
@@ -63,9 +65,9 @@ const MainBoard = () => {
             if(isZooming === true)
                 return
 
-            if(Math.abs(dy) === 100)                            // case where user is using the mouse wheel
-                ControlZoom(((dy/100)*0.075) * -1, zoomDivRef.current, false)
-            else {                                              // case where user is using the trackpad
+            if(Math.abs(event.deltaY) === 100)                            // case where user is using the mouse wheel
+                ControlZoom((parseFloat(zoomDivRef.current.style.zoom) + ((dy/100)*0.025)*-1), zoomDivRef.current)
+            else {                                                        // case where user is using the trackpad
                 ControlMoveWithTouch(moveDivRef.current, {x: dx, y: dy})
             }
         }},
@@ -166,6 +168,7 @@ const MainBoard = () => {
         <Header className='header' toggleLoginModal={toggleLoginModal} toggleSignupModal={toggleSignupModal} toggleProfileModal={toggleProfileModal} />
         <div style={{width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center'}} 
         ref={sensorDivRef}
+        className='sensor-div'
         >
             <div id='zoom-controller' ref={zoomDivRef}>
                 <div id='move-controller' ref={moveDivRef}>
@@ -180,14 +183,14 @@ const MainBoard = () => {
             onClick={onDrawButtonClicked}
             hidden={!isMobile}
             >
-            Draw
+            {t('Draw')}
             </button>
             <button id='recenterButton' 
             type='button' 
             className='btn btn-dark' 
             onClick={onRecenterButtonClicked}
             >
-            Recenter
+            {t('Recenter')}
             </button>
             <ColorPalette />
         </div>

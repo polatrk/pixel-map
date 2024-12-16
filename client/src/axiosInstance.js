@@ -1,5 +1,6 @@
 import axios from 'axios';
 import notify from './utils/Notification';
+import { t } from 'i18next';
 
 const axiosInstance = axios.create({
     baseURL: process.env.REACT_APP_SERVER_URL,
@@ -36,7 +37,7 @@ axiosInstance.interceptors.response.use(
                 })
                 .catch((err) => {
                     if (err.response && err.response.status === 401) {
-                        notify("warn", "Please log in again");
+                        notify("warn", t("Please log in again"));
                         localStorage.removeItem('accessToken');
                         window.dispatchEvent(new Event('userStatusChange'));
                     }

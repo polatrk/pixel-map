@@ -3,6 +3,7 @@ import axiosInstance from "../../axiosInstance"
 import "../../css/CellInfos.css"
 import { CELL_SIZE } from "../../config/constants"
 import { isMobile } from 'react-device-detect';
+import { t } from "i18next";
 
 const CellInfos = ({ cursorPos }) => {
   const [cellInfos, setCellInfos] = useState(null)
@@ -39,16 +40,16 @@ const CellInfos = ({ cursorPos }) => {
     <div className="cellinfos-container top left">
         {isMobile ? (
           <>
-            <p>X: {cellPos ? cellPos.pos_x : "loading..."} Y: {cellPos ? cellPos.pos_y : "loading..."}</p>
-            <p>Modified by: {isFetching ? "loading..." : (cellInfos ? cellInfos.User.username : "Unknown")}</p>
+            <p>X: {cellPos ? cellPos.pos_x : t('Loading...')} Y: {cellPos ? cellPos.pos_y : t('Loading...')}</p>
+            <p>{t('Modified by')}: {isFetching ? t('Loading...') : (cellInfos ? cellInfos.User.username : t('Unknown'))}</p>
           </>
         ) : (
           <>
             <h4>Coords</h4>
-            <p>X: {cellPos ? cellPos.pos_x : "loading..."}</p>
-            <p>Y: {cellPos ? cellPos.pos_y : "loading..."}</p>
-            <h4>Modified by:</h4>
-            <p>{isFetching ? "loading..." : (cellInfos ? cellInfos.User.username : "Unknown")}</p>
+            <p>X: {cellPos ? cellPos.pos_x : t('Loading...')}</p>
+            <p>Y: {cellPos ? cellPos.pos_y : t('Loading...')}</p>
+            <h4>{t('Modified by')}:</h4>
+            <p>{isFetching ? t('Loading...') : (cellInfos ? cellInfos.User.username : t('Unknown'))}</p>
           </>
         )}
     </div>
