@@ -64,9 +64,11 @@ const MainBoard = () => {
             event.preventDefault()
             if(isZooming === true)
                 return
-
-            if(Math.abs(event.deltaY) === 100)                            // case where user is using the mouse wheel
-                ControlZoom((parseFloat(zoomDivRef.current.style.zoom) + ((dy/100)*0.025)*-1), zoomDivRef.current)
+                      
+            if(Math.abs(event.deltaY) === 100) {                          // case where user is using the mouse wheel
+                let currentZoom = zoomDivRef.current.style.zoom ? parseFloat(zoomDivRef.current.style.zoom) : 1
+                ControlZoom((currentZoom + ((dy/100)*0.025)*-1), zoomDivRef.current)
+            }
             else {                                                        // case where user is using the trackpad
                 ControlMoveWithTouch(moveDivRef.current, {x: dx, y: dy})
             }
