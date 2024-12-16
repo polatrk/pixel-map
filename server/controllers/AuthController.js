@@ -140,9 +140,15 @@ const signup = async (req, res) => {
 
         const url = process.env.NODE_ENV === "production" ? process.env.REACT_APP_URL : process.env.REACT_APP_URL_DEV;
         const transporter = nodemailer.createTransport({
-            service: "gmail",
-            auth: { user: process.env.VERIFICATION_EMAIL, pass: process.env.VERIFICATION_EMAIL_PASSWORD },
-        });
+            debug: true,
+            host: 'ssl0.ovh.net',
+            port: 465,
+            secure: true,
+            auth: {
+              user: process.env.VERIFICATION_EMAIL,
+              pass: process.env.VERIFICATION_EMAIL_PASSWORD,
+            }
+        })
 
         await transporter.sendMail({
             from: process.env.VERIFICATION_EMAIL,
@@ -154,7 +160,7 @@ const signup = async (req, res) => {
         return res.json({ message: "Verification email sent. Please check your mailbox." });
     } catch (error) {
         console.error(error);
-        return sendErrorResponse(res, 500, "Internal Server Error.");
+        return sendErrorResponse(res, 500, error);
     }
 };
 
