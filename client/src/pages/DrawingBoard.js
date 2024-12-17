@@ -29,7 +29,7 @@ const DrawingBoard = ({toggleLoginModal}) => {
     const isLocalHost = wssUrl.includes('localhost')
     const socketProtocol = isLocalHost ? 'ws' : 'wss'
     const socket = new WebSocket(`${socketProtocol}://${process.env.REACT_APP_SERVER_URL.replace(/^.*\/\//, "")}`)
-
+    console.log(socket)
     // init variables
     const drawingBoard = document.querySelector("#drawing-board")
     const canvasCursor = document.querySelector('#canvas-cursor')
