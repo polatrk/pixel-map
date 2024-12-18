@@ -9,13 +9,14 @@ import { GetUserInfos } from '../utils/UserInfos'
 import { OnClickInCanvas } from '../utils/DrawingBoardControls'
 import { ColorContext } from "../utils/context/ColorContext";
 import { isMobile } from 'react-device-detect'
+import { SocketContext } from '../utils/context/SocketContext'
 
-const DrawingBoard = ({toggleLoginModal, socket}) => {
+const DrawingBoard = ({toggleLoginModal}) => {
   const [isLoaded, setLoaded] = useState(false)
   const [canvasMatrix, setCanvasMatrix] = useState()
   const [drawingBoardSize, setDrawingBoardSize] = useState({x: 0, y: 0})
   const { selectedColor } = useContext(ColorContext);
-
+  const { socket } = useContext(SocketContext);
 
   // avoid rerender when selected color changes
   const selectedColorRef = useRef(selectedColor)
@@ -24,12 +25,6 @@ const DrawingBoard = ({toggleLoginModal, socket}) => {
   }, [selectedColor]);
 
   useEffect(() => {
-    // create ws connection
-    const wssUrl = process.env.REACT_APP_SERVER_URL
-    const isLocalHost = wssUrl.includes('localhost')
-    const socketProtocol = isLocalHost ? 'ws' : 'wss'
-    const socket = new WebSocket(`${socketProtocol}://${process.env.REACT_APP_SERVER_URL.replace(/^.*\/\//, "")}`)
-    console.log(socket.url)
     // init variables
     const drawingBoard = document.querySelector("#drawing-board")
     const canvasCursor = document.querySelector('#canvas-cursor')

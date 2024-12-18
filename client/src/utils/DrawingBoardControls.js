@@ -1,8 +1,7 @@
 import { getCursorPosInCanvas } from "./TransformUtils"
-import axiosInstance from "../axiosInstance"
 import { CELL_SIZE } from "../config/constants"
 import { GetUserInfos } from "./UserInfos"
-import { DrawSingleCell } from "./DrawingUtils"
+import { DrawSingleCell, PushCell } from "./DrawingUtils"
 
 export function OnClickInCanvas(event, socket, selectedColor) {
     let cursorPos = getCursorPosInCanvas({pos_x: event.clientX, pos_y: event.clientY})
@@ -20,15 +19,5 @@ export function OnClickInCanvas(event, socket, selectedColor) {
 
     DrawSingleCell(cellData)
 
-    axiosInstance.post('/cells', cellData, {
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    })
-    .then(response => {
-        socket.send(JSON.stringify(response.data));
-    })
-    .catch(error => {
-        console.error("Error:", error);
-    });
+    PushCell(cellData, socket)
 }

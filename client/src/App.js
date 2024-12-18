@@ -9,6 +9,7 @@ import VerifiedEmail from './pages/VerifiedEmail';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { ColorProvider } from './utils/context/ColorContext';
+import { SocketProvider } from './utils/context/SocketContext';
 
 function App() {
   return (
@@ -18,7 +19,9 @@ function App() {
         
         <Route index element={
           <ColorProvider>
-            <MainBoard />          
+            <SocketProvider>
+              <MainBoard /> 
+            </SocketProvider>         
           </ColorProvider>
           } />
 

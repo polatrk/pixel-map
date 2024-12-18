@@ -1,3 +1,4 @@
+import axiosInstance from "../axiosInstance";
 import { CELL_SIZE, CELL_PER_CANVAS } from "../config/constants";
 
 export function DrawMultipleCells(cells) {
@@ -31,3 +32,16 @@ export function DrawSingleCell(cellData) {
     ctx.closePath();
 }
 
+export function PushCell(cellData, socket) {
+  axiosInstance.post('/cells', cellData, {
+    headers: {
+        'Content-Type': 'application/json',
+    },
+  })
+  .then(response => {
+      socket.send(JSON.stringify(response.data));
+  })
+  .catch(error => {
+      console.error("Error:", error);
+  });
+}
