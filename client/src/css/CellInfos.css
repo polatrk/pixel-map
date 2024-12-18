@@ -8,8 +8,8 @@
     height: fit-content;
     background-color: white;
 
-    border-radius: 1vw;
-    border: 2px solid black;
+    border-radius: .7vw;
+    border: .4vh solid black;
 }
 
 .cellinfos-container * {

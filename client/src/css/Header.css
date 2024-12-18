@@ -1,16 +1,38 @@
 .header-container {
     display: flex;
-    flex-direction: row;
-
+    flex-direction: column;
+    position: relative;
     z-index: 1;
 }
 
-.header-container button {
-    margin: 0.25vw;
+.toggle-button {
+    align-items: center;
+    border: .4vh solid !important;
 }
 
-@media (max-width: 768px) {
-    .header-container {
-        flex-direction: column;
-    }
+.toggle-button img {
+    width: 4vh;
+    height: 4vh;
+
+    image-rendering: pixelated;
+}
+
+.header-elements_container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    width: 20vh;
+    position: fixed;
+    top: 8.2vh;
+    right: -20vh;    
+    transition: right 0.25s linear;
+}
+
+.header-elements_container.show {
+    right: 0;
+}
+
+.header-elements_container button {
+    margin: 0.25vw;
 }
