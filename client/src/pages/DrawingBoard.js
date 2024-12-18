@@ -10,7 +10,7 @@ import { OnClickInCanvas } from '../utils/DrawingBoardControls'
 import { ColorContext } from "../utils/context/ColorContext";
 import { isMobile } from 'react-device-detect'
 
-const DrawingBoard = ({toggleLoginModal}) => {
+const DrawingBoard = ({toggleLoginModal, socket}) => {
   const [isLoaded, setLoaded] = useState(false)
   const [canvasMatrix, setCanvasMatrix] = useState()
   const [drawingBoardSize, setDrawingBoardSize] = useState({x: 0, y: 0})

@@ -16,6 +16,7 @@ import { GetUserInfos } from '../utils/UserInfos'
 import { DrawSingleCell } from '../utils/DrawingUtils'
 import { ColorContext } from '../utils/context/ColorContext'
 import { useTranslation } from 'react-i18next'
+import axiosInstance from '../axiosInstance'
 
 const MainBoard = () => {
     // dom elements
@@ -27,6 +28,7 @@ const MainBoard = () => {
     const [isLoginModalOpen, setLoginModalOpen] = useState(false)
     const [isSignupModalOpen, setSignupModalOpen] = useState(false)
     const [isProfileModalOpen, setProfileModalOpen] = useState(false)
+    const [socket, setSocket] = useState(null)
     const [cursorPos, setCursorPos] = useState({})
 
     // other
@@ -93,6 +95,18 @@ const MainBoard = () => {
         };
     
         DrawSingleCell(cellData)
+
+        axiosInstance.post('/cells', cellData, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => {
+            socket.send(JSON.stringify(response.data));
+        })
+        .catch(error => {
+            console.error("Error:", error);
+        })
     }
 
     const onRecenterButtonClicked = () => {
@@ -102,6 +116,13 @@ const MainBoard = () => {
 
 
     useEffect(() => {
+        // create ws connection
+        const wssUrl = process.env.REACT_APP_SERVER_URL
+        const isLocalHost = wssUrl.includes('localhost')
+        const socketProtocol = isLocalHost ? 'ws' : 'wss'
+        const newSocket = new WebSocket(`${socketProtocol}://${process.env.REACT_APP_SERVER_URL.replace(/^.*\/\//, "")}`)
+        setSocket(newSocket)
+
         const canvas = moveDivRef.current.querySelector("#drawing-board")
 
         let bIsMouseDown = false
@@ -157,6 +178,8 @@ const MainBoard = () => {
                 sensorDivRef.current.removeEventListener("mousemove", handleMouseMove)
                 sensorDivRef.current.removeEventListener("touchmove", handleMouseMove)
             }
+            if(socket)
+                socket.close()
         }
     }, [])
 
@@ -174,7 +197,7 @@ const MainBoard = () => {
         >
             <div id='zoom-controller' ref={zoomDivRef}>
                 <div id='move-controller' ref={moveDivRef}>
-                    <DrawingBoard toggleLoginModal={toggleLoginModal} />
+                    <DrawingBoard toggleLoginModal={toggleLoginModal} socket={socket}/>
                 </div>
             </div>
         </div>

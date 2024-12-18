@@ -29,4 +29,5 @@ export function DrawSingleCell(cellData) {
     )
     ctx.fill()
     ctx.closePath();
-  }
+}
+
