@@ -53,14 +53,18 @@ const DrawingBoard = ({toggleLoginModal}) => {
       // round to the cell size 
       pos_x = (Math.floor(pos_x/CELL_SIZE)*CELL_SIZE)
       pos_y = (Math.floor(pos_y/CELL_SIZE)*CELL_SIZE)
-
+      console.log(pos_x, pos_y)
       canvasCursor.style.left = `${pos_x}px`
       canvasCursor.style.top = `${pos_y}px`
     }
 
     // add listeners
     drawingBoard.addEventListener('mouseup', handleClickOnCanvas)
-    drawingBoard.addEventListener('mousedown', (e) => downClickPos = {pos_x: e.clientX, pos_y: e.clientY})
+    drawingBoard.addEventListener('mousedown', (e) => {
+      downClickPos = {pos_x: e.clientX, pos_y: e.clientY}
+      if(isMobile)
+        handleMouseMove(e)
+    })
     drawingBoard.addEventListener('mousemove', handleMouseMove)
     drawingBoard.addEventListener('mouseenter', () => {
       canvasCursor.style.visibility = 'visible'
