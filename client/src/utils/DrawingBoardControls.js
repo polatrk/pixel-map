@@ -8,13 +8,16 @@ export function OnClickInCanvas(event, socket, selectedColor) {
     // round to the cell size
     cursorPos.pos_x = Math.floor(cursorPos.pos_x/CELL_SIZE)
     cursorPos.pos_y = Math.floor(cursorPos.pos_y/CELL_SIZE)
-
     const cellData = {
         pos_x: cursorPos.pos_x,
         pos_y: cursorPos.pos_y,
         color: selectedColor,
         modified_by: GetUserInfos().id
     };
+
+    console.log('----------------------------------------------------------------')
+    console.log(cellData)
+    console.log('----------------------------------------------------------------')
 
     DrawSingleCell(cellData)
 
