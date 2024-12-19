@@ -16,6 +16,7 @@ const CellInfos = ({ cursorPos }) => {
   const encodedPos = encodeURIComponent(JSON.stringify(cellPos))
 
   useEffect(() => {
+    console.log('infos:', cellPos.pos_x, '/', cellPos.pos_y)
     const interval = setInterval(() => {
       axiosInstance.get(`/cells/${encodedPos}`)
         .then(response => {
