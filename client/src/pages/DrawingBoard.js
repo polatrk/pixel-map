@@ -48,7 +48,7 @@ const DrawingBoard = ({toggleLoginModal}) => {
     }
 
     const handleMouseMove = (e) => {
-      let {pos_x, pos_y} = getCursorPosInCanvas({pos_x: e.clientX, pos_y: e.clientY})
+      let {pos_x, pos_y} = getCursorPosInCanvas(isMobile ? downClickPos : {pos_x: e.clientX, pos_y: e.clientY})
 
       // round to the cell size 
       pos_x = (Math.floor(pos_x/CELL_SIZE)*CELL_SIZE)
