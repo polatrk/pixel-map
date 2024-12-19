@@ -4,19 +4,22 @@ import "../../css/CellInfos.css"
 import { CELL_SIZE } from "../../config/constants"
 import { isMobile } from 'react-device-detect';
 import { t } from "i18next";
+import { getCursorPosInCanvas } from "../../utils/TransformUtils";
 
-const CellInfos = ({ cursorPos }) => {
+const CellInfos = ({ cursorPos, canvas }) => {
   const [cellInfos, setCellInfos] = useState(null)
   const [isFetching, setIsFetching] = useState(true)
+  let canvasCursorPos = {pos_x: 0, pos_y: 0}
+  if(canvas)
+    canvasCursorPos = getCursorPosInCanvas(cursorPos, canvas)
   const cellPos = {
-    pos_x: Math.floor(cursorPos.pos_x / CELL_SIZE),
-    pos_y: Math.floor(cursorPos.pos_y / CELL_SIZE),
+    pos_x: Math.floor(canvasCursorPos.pos_x / CELL_SIZE),
+    pos_y: Math.floor(canvasCursorPos.pos_y / CELL_SIZE),
   }
   
   const encodedPos = encodeURIComponent(JSON.stringify(cellPos))
 
   useEffect(() => {
-    console.log('infos:', cellPos.pos_x, '/', cellPos.pos_y)
     const interval = setInterval(() => {
       axiosInstance.get(`/cells/${encodedPos}`)
         .then(response => {
@@ -34,7 +37,7 @@ const CellInfos = ({ cursorPos }) => {
       clearInterval(interval)
       setIsFetching(true)
     }
-  }, [cursorPos])
+  }, [canvas])
   
 
   return (

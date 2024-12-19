@@ -30,6 +30,7 @@ const MainBoard = () => {
     const [isLoginModalOpen, setLoginModalOpen] = useState(false)
     const [isSignupModalOpen, setSignupModalOpen] = useState(false)
     const [isProfileModalOpen, setProfileModalOpen] = useState(false)
+    const [canvas, setCanvas] = useState(null)
     const [cursorPos, setCursorPos] = useState({})
 
     // other
@@ -97,12 +98,8 @@ const MainBoard = () => {
         };
     
         DrawSingleCell(cellData)
-        // console.log("mobile clicked:", {clientX: cursorPos.pos_x, clientY: cursorPos.pos_y}, '/', socket.url, '/', selectedColor)
-        // const cellPos = {
-        //     pos_x: Math.floor(cursorPos.pos_x / CELL_SIZE),
-        //     pos_y: Math.floor(cursorPos.pos_y / CELL_SIZE),
-        //   }
-        // OnClickInCanvas({clientX: cursorPos.pos_x, clientY: cursorPos.pos_y}, socket, selectedColor) 
+
+        OnClickInCanvas({clientX: cursorPos.pos_x, clientY: cursorPos.pos_y}, socket, selectedColor) 
     }
 
     const onRecenterButtonClicked = () => {
@@ -112,8 +109,8 @@ const MainBoard = () => {
 
 
     useEffect(() => {
-        const canvas = moveDivRef.current.querySelector("#drawing-board")
-
+        setCanvas(moveDivRef.current.querySelector("#drawing-board"))
+        
         let bIsMouseDown = false
         let clickPosInCanvas = {pos_x: 0, pos_y: 0}
         let lastHoveredCellPos = {pos_x: 0, pos_y: 0}
@@ -137,7 +134,7 @@ const MainBoard = () => {
                 pos_y: Math.floor(cursorPos.pos_y / CELL_SIZE),
               }
             if(cellPos.pos_x !== lastHoveredCellPos.pos_x || cellPos.pos_y !== lastHoveredCellPos.pos_y) {
-                setCursorPos(getCursorPosInCanvas({pos_x: eventOrigin.clientX, pos_y: eventOrigin.clientY}, canvas))
+                setCursorPos({pos_x: eventOrigin.clientX, pos_y: eventOrigin.clientY})
                 lastHoveredCellPos = cellPos
             }
         }
@@ -207,7 +204,7 @@ const MainBoard = () => {
             <ColorPalette />
         </div>
         
-        <CellInfos cursorPos={cursorPos} className="cell-infos"/>
+        <CellInfos cursorPos={cursorPos} canvas={canvas} className="cell-infos"/>
         <CustomCursor />
     </div>
   )
