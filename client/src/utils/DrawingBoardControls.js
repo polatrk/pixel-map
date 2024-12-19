@@ -16,8 +16,9 @@ export function OnClickInCanvas(event, socket, selectedColor) {
     };
 
     console.log('----------------------------------------------------------------')
-    console.log(cellData)
-    console.log('----------------------------------------------------------------')
+    console.log('pos:', cellData.pos_x, cellData.pos_y)
+    console.log('color:', cellData.color)
+    console.log('modified by:', cellData.modified_by)
 
     DrawSingleCell(cellData)
 

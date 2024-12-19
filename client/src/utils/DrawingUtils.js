@@ -8,6 +8,7 @@ export function DrawMultipleCells(cells) {
 }
 
 export function DrawSingleCell(cellData) {
+    console.log('drawing cell:')
     const canvasX = Math.floor(cellData.pos_x/CELL_PER_CANVAS)
     const canvasY = Math.floor(cellData.pos_y/CELL_PER_CANVAS)
     const canvas = document.getElementById(`${canvasX}${canvasY}`)
@@ -19,7 +20,7 @@ export function DrawSingleCell(cellData) {
     const ctx = canvas.getContext('2d')
     let drawPosX = cellData.pos_x < CELL_PER_CANVAS ? cellData.pos_x : cellData.pos_x-(canvasX*CELL_PER_CANVAS <= 0 ? 1 : canvasX*CELL_PER_CANVAS)
     let drawPosY = cellData.pos_y < CELL_PER_CANVAS ? cellData.pos_y : cellData.pos_y-(canvasY*CELL_PER_CANVAS <= 0 ? 1 : canvasY*CELL_PER_CANVAS)
-
+    console.log('drawposx:', drawPosX)
     ctx.beginPath();
     ctx.fillStyle = cellData.color
     ctx.rect(
@@ -33,6 +34,9 @@ export function DrawSingleCell(cellData) {
 }
 
 export function PushCell(cellData, socket) {
+  console.log('push cell')
+  console.log('----------------------------------------------------------------')
+
   axiosInstance.post('/cells', cellData, {
     headers: {
         'Content-Type': 'application/json',
