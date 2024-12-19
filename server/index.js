@@ -9,7 +9,7 @@ const app = express();
 
 app.use(cookieParser());
 app.use(cors({
-  origin: ['http://localhost:3000', 'https://www.pixelmap.fr'],
+  origin: ['http://localhost:3000', 'https://www.pixelmap.fr', '*'],
   credentials: true
 }))
 app.use(express.json());
