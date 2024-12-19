@@ -19,8 +19,16 @@ const findAll = async (req, res) => {
 const saveCell = async (req, res) => {
     try {
         const { pos_x, pos_y, color } = req.body;
+
+        const authHeaders = req.headers.authorization || req.headers.Authorization
+        if(!authHeaders?.startsWith('Bearer ')) {
+            return sendErrorResponse(res, 401, "Unauthorized")
+        }
+
+        const token = authHeaders.split(' ')[1]
         const decoded = await jwt.verify(token, process.env.VERIFICATION_EMAIL_TOKEN_SECRET)
         const modified_by = decoded.id
+        
         if ((!pos_x && pos_x !== 0) || (!pos_y && pos_y !== 0) || !color) {
             return sendErrorResponse(res, 400, "All fields are required.");
         }
