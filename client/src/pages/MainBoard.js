@@ -84,21 +84,25 @@ const MainBoard = () => {
     )
 
     const onDrawButtonClicked = () => {
+        const cellPos = {
+            pos_x: Math.floor(cursorPos.pos_x / CELL_SIZE),
+            pos_y: Math.floor(cursorPos.pos_y / CELL_SIZE),
+          }
+
+        const cellData = {
+            pos_x: cellPos.pos_x,
+            pos_y: cellPos.pos_y,
+            color: selectedColor,
+            modified_by: GetUserInfos().id
+        };
+    
+        DrawSingleCell(cellData)
+        // console.log("mobile clicked:", {clientX: cursorPos.pos_x, clientY: cursorPos.pos_y}, '/', socket.url, '/', selectedColor)
         // const cellPos = {
         //     pos_x: Math.floor(cursorPos.pos_x / CELL_SIZE),
         //     pos_y: Math.floor(cursorPos.pos_y / CELL_SIZE),
         //   }
-
-        // const cellData = {
-        //     pos_x: cellPos.pos_x,
-        //     pos_y: cellPos.pos_y,
-        //     color: selectedColor,
-        //     modified_by: GetUserInfos().id
-        // };
-    
-        // DrawSingleCell(cellData)
-        // console.log("mobile clicked:", {clientX: cursorPos.pos_x, clientY: cursorPos.pos_y}, '/', socket.url, '/', selectedColor)
-        OnClickInCanvas({clientX: cursorPos.pos_x, clientY: cursorPos.pos_y}, socket, selectedColor) 
+        // OnClickInCanvas({clientX: cursorPos.pos_x, clientY: cursorPos.pos_y}, socket, selectedColor) 
     }
 
     const onRecenterButtonClicked = () => {
