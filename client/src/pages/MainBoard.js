@@ -12,11 +12,8 @@ import { CELL_SIZE } from '../config/constants'
 import CustomCursor from './components/CustomCursor'
 import { useGesture } from '@use-gesture/react'
 import { isMobile } from 'react-device-detect'
-import { GetUserInfos } from '../utils/UserInfos'
-import { DrawSingleCell } from '../utils/DrawingUtils'
 import { ColorContext } from '../utils/context/ColorContext'
 import { useTranslation } from 'react-i18next'
-import axiosInstance from '../axiosInstance'
 import { OnClickInCanvas } from '../utils/DrawingBoardControls'
 import { SocketContext } from '../utils/context/SocketContext'
 
@@ -85,19 +82,19 @@ const MainBoard = () => {
     )
 
     const onDrawButtonClicked = () => {
-        const cellPos = {
-            pos_x: Math.floor(cursorPos.pos_x / CELL_SIZE),
-            pos_y: Math.floor(cursorPos.pos_y / CELL_SIZE),
-          }
+        // const cellPos = {
+        //     pos_x: Math.floor(cursorPos.pos_x / CELL_SIZE),
+        //     pos_y: Math.floor(cursorPos.pos_y / CELL_SIZE),
+        //   }
 
-        const cellData = {
-            pos_x: cellPos.pos_x,
-            pos_y: cellPos.pos_y,
-            color: selectedColor,
-            modified_by: GetUserInfos().id
-        };
+        // const cellData = {
+        //     pos_x: cellPos.pos_x,
+        //     pos_y: cellPos.pos_y,
+        //     color: selectedColor,
+        //     modified_by: GetUserInfos().id
+        // };
     
-        DrawSingleCell(cellData)
+        // DrawSingleCell(cellData)
 
         OnClickInCanvas({clientX: cursorPos.pos_x, clientY: cursorPos.pos_y}, socket, selectedColor) 
     }
