@@ -84,7 +84,12 @@ const MainBoard = () => {
     )
 
     const onDrawButtonClicked = () => {
-        OnClickInCanvas({clientX: cursorPos.pos_x, clientY: cursorPos.pos_y}, socket, selectedColor) 
+        const cellPos = {
+            pos_x: Math.floor(cursorPos.pos_x / CELL_SIZE),
+            pos_y: Math.floor(cursorPos.pos_y / CELL_SIZE),
+        }
+
+        OnClickInCanvas(cellPos, socket, selectedColor) 
     }
 
     const onRecenterButtonClicked = () => {

@@ -8,7 +8,6 @@ export function DrawMultipleCells(cells) {
 }
 
 export function DrawSingleCell(cellData) {
-    console.log('drawing cell:')
     const canvasX = Math.floor(cellData.pos_x/CELL_PER_CANVAS)
     const canvasY = Math.floor(cellData.pos_y/CELL_PER_CANVAS)
     const canvas = document.getElementById(`${canvasX}${canvasY}`)
@@ -34,9 +33,6 @@ export function DrawSingleCell(cellData) {
 }
 
 export function PushCell(cellData, socket) {
-  console.log('push cell')
-  console.log('----------------------------------------------------------------')
-
   axiosInstance.post('/cells', cellData, {
     headers: {
         'Content-Type': 'application/json',
