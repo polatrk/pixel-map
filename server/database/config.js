@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 
-const sequelize = new Sequelize('mysql://root:xJutwDaXJIMhJcTIQPbTmtQOfBMdQejU@junction.proxy.rlwy.net:13650/railway');
+const sequelize = new Sequelize(process.env.DB_URL);
 
 sequelize.authenticate()
 .then(() => {
