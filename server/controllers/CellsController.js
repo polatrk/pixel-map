@@ -27,7 +27,7 @@ const saveCell = async (req, res) => {
 
         const token = authHeaders.split(' ')[1]
         console.log(authHeaders)
-        const decoded = await jwt.verify(token, process.env.VERIFICATION_EMAIL_TOKEN_SECRET)
+        const decoded = await jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
         const modified_by = decoded.id
         
         if ((!pos_x && pos_x !== 0) || (!pos_y && pos_y !== 0) || !color) {
