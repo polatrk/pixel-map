@@ -37,7 +37,7 @@ const CellInfos = ({ cursorPos, canvas }) => {
       clearInterval(interval)
       setIsFetching(true)
     }
-  }, [canvas])
+  }, [cursorPos])
   
 
   return (
