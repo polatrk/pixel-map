@@ -32,7 +32,7 @@ In `/client` and `/server` directories, rename the `.env.template` files to `.en
 cd /xxx/pixel-map/client && npm start
 ```
 
-- Terminal 1:
+- Terminal 2:
 ```bash
 cd /xxx/pixel-map/server && npm start
 ```
