@@ -26,7 +26,6 @@ const saveCell = async (req, res) => {
         }
 
         const token = authHeaders.split(' ')[1]
-        console.log(authHeaders)
         const decoded = await jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
         const modified_by = decoded.id
         
