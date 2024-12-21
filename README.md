@@ -11,7 +11,7 @@ Install [NodeJS, npm](https://nodejs.org/en/download/package-manager) and [MySQL
 
 Then type those commands:
 ```bash
-git clone https://github.com/pithieLS/pixel-map.git
+git clone https://github.com/polatrk/pixel-map.git
 
 mysql -u username -p database_name < file.sql
 
