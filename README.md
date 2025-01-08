@@ -13,7 +13,7 @@ Then type those commands:
 ```bash
 git clone https://github.com/polatrk/pixel-map.git
 
-mysql -u username -p database_name < file.sql
+mysql -u username -p database_name < database.sql
 
 cd ./pixel-map/client && npm install
 cd ../server && npm install
